@@ -1,8 +1,8 @@
-import { defineField, defineType} from "sanity"
+import { defineArrayMember, defineField, defineType} from "sanity"
 import { TagsIcon } from "@sanity/icons"
 export const category = defineType({
     type: "document",
-    name: "category",
+    name: "categories",
     title: "Kategorie",
     icon: TagsIcon,
     fields: [
@@ -14,9 +14,11 @@ export const category = defineType({
         defineField({
             type: "array",
             title:"Informační text",
-            name: "overview", 
+            name: "details", 
             of: [
-                {type: "block"}
+                defineArrayMember({
+                    type: "block"
+                })
             ]
         }),
         defineField({

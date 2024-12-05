@@ -26,7 +26,7 @@ export const review = defineType({
             name: "product",
             title: "Produkt",
             type: "reference",
-            to: [{type: "product"}]
+            to: [{type: "products"}]
         })
     ]
 })

@@ -12,6 +12,8 @@ import {structureTool} from 'sanity/structure'
 import {apiVersion, dataset, projectId} from './sanity/env'
 import {schema} from './sanity/schemaTypes'
 import {structure} from './sanity/structure'
+import { cancelledOrder, completedOrder, paidOrder, refundedOrder, sendOrder } from './sanity/lib/actions'
+import { paid } from './actions/actions'
 
 export default defineConfig({
   basePath: '/studio',
@@ -25,4 +27,7 @@ export default defineConfig({
     // https://www.sanity.io/docs/the-vision-plugin
     visionTool({defaultApiVersion: apiVersion}),
   ],
+  document: {
+    actions: [cancelledOrder, refundedOrder, completedOrder, paidOrder, sendOrder], 
+  }
 })

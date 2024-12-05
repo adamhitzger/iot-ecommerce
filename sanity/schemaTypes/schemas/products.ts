@@ -1,10 +1,10 @@
 import { PlugIcon } from "@sanity/icons"
-import { defineField, defineType} from "sanity"
+import { defineField, defineType, defineArrayMember} from "sanity"
 
 export const product = defineType({
     type: "document",
-    name: "product",
-    title: "Produkt",
+    name: "products",
+    title: "Produkty",
     icon: PlugIcon,
     fields: [
         defineField({
@@ -36,7 +36,9 @@ export const product = defineType({
             title:"Popis",
             name: "details",
             of: [
-                { type: "block"}
+                defineArrayMember({
+                     type: "block"
+                    })
             ] 
         }),
         defineField({
@@ -45,24 +47,26 @@ export const product = defineType({
             type: "image",
         }),
         defineField({
-            name: "gallery",
+            name: "images",
             title: "Galerie fotek",
             type: "array",
             of: [
-                {type: "image"},
+                defineArrayMember({
+                    type: "image"
+                }),
             ]
         }),
         defineField({
             type: "number",
             title: "Množství",
             name: "quantity",
-            validation: rule => rule.required().integer().positive()
+            validation: rule => rule.required().integer().positive().min(0)
         }),
         defineField({
             name: "category",
             title: "Kategorie",
             type: "reference",
-            to: [{type: "category"}]
+            to: [{type: "categories"}]
         }),
         defineField({
             name: "manual",
@@ -74,7 +78,9 @@ export const product = defineType({
             title: "URL tutoriálu",
             type: "array",
             of: [
-                {type: "url"}
+                defineArrayMember({
+                    type: "url"
+                })
             ]
         })
     ]
