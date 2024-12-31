@@ -12,16 +12,6 @@ export const category = defineType({
             name: "name", 
         }),
         defineField({
-            type: "array",
-            title:"Informační text",
-            name: "details", 
-            of: [
-                defineArrayMember({
-                    type: "block"
-                })
-            ]
-        }),
-        defineField({
             type: "slug",
             title: "URL adresa",
             name: "slug",

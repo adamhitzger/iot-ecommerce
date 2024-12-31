@@ -3,7 +3,7 @@ import { defineField, defineType} from "sanity"
 
 export const review = defineType({
     type: "document",
-    name: "review",
+    name: "reviews",
     title: "Hodnocení",
     icon: StarIcon,
     fields: [

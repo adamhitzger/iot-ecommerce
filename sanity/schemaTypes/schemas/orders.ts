@@ -67,10 +67,15 @@ export const orders = defineType({
         }),
         defineField({
             type: "string",
+            title:"Štítek ze Zásilkovny",
+            name: "barcode", 
+        }),
+        defineField({
+            type: "string",
             title:"Status",
             name: "status", 
             options: {
-                list: ["Přijatá", "Zaplacená" ,"Odeslaná", "Vyzvednutá", "Zrušená", "Vracení"],
+                list: ["Přijatá", "Zaplacená" ,"Odeslaná", "Vyzvednutá", "Zrušená", "Vrácení"],
                 layout: "dropdown",
             }
         }),

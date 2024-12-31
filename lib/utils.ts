@@ -1,9 +1,7 @@
-import {createTransport } from "nodemailer"
+import { clsx, type ClassValue } from "clsx"
+import { twMerge } from "tailwind-merge"
 
-export const transporter = createTransport({
-    service: "gmail",
-    auth: {
-     user: process.env.FROM_EMAIL!,
-     pass: process.env.FROM_EMAIL_PASSWORD!,
-    }
-   });
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}

@@ -1,5 +1,5 @@
 type Country = "Slovenská republika" | "Česká republika";
-type Status = "Přijatá"| "Zaplacená" |"Odeslaná"| "Vyzvednutá"| "Zrušená"| "Vracení";
+type Status = "Přijatá"| "Zaplacená" |"Odeslaná"| "Vyzvednutá"| "Zrušená"| "Vrácení";
 
 interface OrderedItem {
     _type: "orderedItem";
@@ -28,6 +28,7 @@ export interface Order {
     address: string;
     total: number;
     packetaId: number;
+    barcode: string;
     status: Status;
     orderedProducts: OrderedItem[];
 }
@@ -41,7 +42,7 @@ export interface Product {
     picture: string;
     pictures: string[];
     quantity: number;
-    category: string;
+    category: Category;
     file: string;
     tutorial: string[];
 }
@@ -55,11 +56,39 @@ export interface Review {
 
 export interface Category {
     name: string;
-    details: any;
     slug: Slug;
     picture: string;
 }
 
+export interface Banner {
+    heading: string;
+    imageUrl: string;
+    text: string;
+    category: Category;
+}
+
+
+export interface Href {
+    route: string;
+    name?: string;
+};
+
+
+
+export interface Route extends Href {
+    lastModified: string;
+  };
+
+  export interface Coupon {
+    code: string;
+    percentage: number;
+    free_del: boolean;
+  }
+
+export type Coupons = Coupon[]  
+export type Banners = Banner[]
 export type Products = Product[]
 export type Reviews = Review[]
 export type Categories = Category[]
+export type Links = Href[]
+export type XML = Route[]

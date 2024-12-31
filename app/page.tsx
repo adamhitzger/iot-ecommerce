@@ -1,8 +1,25 @@
-export default function Home() {
+import Image from "next/image";
+import { Products, Categories, Banners } from "@/types";
+import { BANNERS, CATEGORIES, PRODUCTS } from "@/sanity/lib/queries";
+import { sanityFetch } from "@/sanity/lib/client";
+import { Slider} from "@/components/banners";
+import ProductsGrid  from "@/components/productsgrid";
+import About from "@/components/about";
+export default async function Home() {
+  const productsPromise = await sanityFetch<Products>({query: PRODUCTS});
+  const bannersPromise = await sanityFetch<Banners>({query: BANNERS});
+  const categoriesPromise = await sanityFetch<Categories>({query: CATEGORIES});
+  const [banners, products, categories] = await Promise.all([
+    bannersPromise,
+    productsPromise,
+    categoriesPromise
+  ])
+  
   return (
-    <>      
-    <h1 className="text-center font-bold text-xl p-3 ">Expresif coming soon...</h1>
-    <h1 className="text-center font-medium text-lg  ">Zapiname pásy!</h1>
-    </>
+    <div className="space-y-8">
+      <Slider slides={banners}/> 
+      <ProductsGrid products={products} categories={categories}/>
+      <About/>
+    </div>
   );
 }
