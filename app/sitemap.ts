@@ -1,7 +1,7 @@
 import { sanityFetch } from "@/sanity/lib/client";
 import { PRODUCTS } from "@/sanity/lib/queries";
 import { MetadataRoute } from "next";
-import { Products, Product, Route, XML } from "@/types";
+import { Products, Product, XML } from "@/types";
 
 
 export const dynamic = "force-dynamic"
@@ -32,7 +32,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     
     let fetchedRoutes: XML = [];
     try{
-        fetchedRoutes = (await Promise.all([productsPromise])).flat();
+        fetchedRoutes = (await Promise.all([productPromise])).flat();
 
     }catch(error){
         throw JSON.stringify(error)

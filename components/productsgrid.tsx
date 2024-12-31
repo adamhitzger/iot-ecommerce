@@ -3,7 +3,7 @@
 import { Products, Product, Categories, Category } from "@/types"
 import Image from "next/image";
 import Link from "next/link";
-import { PortableText } from "next-sanity";
+
 export default function ProductsGrid({products, categories}:{products: Products, categories: Categories}){
  return (
     <section className="w-full flex flex-col space-y-4 text-center">

@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { ShoppingBagIcon, MenuIcon } from "lucide-react";
+import { MenuIcon } from "lucide-react";
 import {
     Sheet,
     SheetContent,
