@@ -160,3 +160,17 @@ const packeta = await fetch("https://www.zasilkovna.cz/api/rest", {
     return packetaCode
     
   } 
+
+  export async function sendNewsletter(formData: FormData){
+    let name: string = "";
+    let email: string = "";
+    let surname: string = "";
+        name = formData.get("name") as string;
+            email = formData.get("email") as string;
+            surname = formData.get("surname") as string;
+    try {
+    
+  }catch(error){
+    console.log(error);
+  }
+  } 

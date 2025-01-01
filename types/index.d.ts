@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 type Country = "Slovenská republika" | "Česká republika";
 type Status = "Přijatá"| "Zaplacená" |"Odeslaná"| "Vyzvednutá"| "Zrušená"| "Vrácení";
 
@@ -73,8 +75,6 @@ export interface Href {
     name?: string;
 };
 
-
-
 export interface Route extends Href {
     lastModified: string;
   };
@@ -85,6 +85,14 @@ export interface Route extends Href {
     free_del: boolean;
   }
 
+export interface Card {
+    icon: React.Component;
+    heading: string;
+    text: string;
+}
+
+
+export type Cards = Card[]
 export type Coupons = Coupon[]  
 export type Banners = Banner[]
 export type Products = Product[]

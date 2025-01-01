@@ -39,7 +39,7 @@ export const PRODUCTS = groq`*[_type == "products"][0..11] {
     "picture": image.asset->url,
 }`
 
-export const CATEGORIES = groq`*[_type == "categories"][0..4] {
+export const CATEGORIES = groq`*[_type == "categories"][0..5] {
     name,
     "slug": slug.current,
     "picture": image.asset->url,

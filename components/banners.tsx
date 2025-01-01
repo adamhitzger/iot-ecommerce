@@ -29,8 +29,8 @@ export function Slider({slides}: {slides: Banners}) {
                 {slides.map((s: Banner, i: number) => (
                     <CarouselItem className="flex flex-wrap w-full gap-y-" key={i}>
                         <div className="flex flex-col justify-center space-y-6 w-full md:w-1/2 px-8">
-                            <h1 className="font-bold text-5xl">{s.heading}</h1>
-                            <p className="font-medium text-3xl">{s.text}</p>
+                            <h1 className="font-bold text-5xl sm:text-7xl">{s.heading}</h1>
+                            <p className="font-medium text-4xl">{s.text}</p>
                             <Link href={`/categories?name=${s.category.slug}`}>
                                 <Button>Zakoupit</Button>
                             </Link>

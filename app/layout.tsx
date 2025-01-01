@@ -3,6 +3,9 @@ import {Inconsolata} from "next/font/google"
 import "./globals.css";
 import Navbar from "@/components/navbar";
 import AgeBanner from "@/components/agebanner";
+import Footer from "@/components/footer";
+import CookiesBanner from "@/components/cookiesbanner";
+import { Toaster } from "react-hot-toast";
 
 const inconsolata = Inconsolata({
   subsets: ["latin"],
@@ -25,10 +28,18 @@ export default function RootLayout({
         className={`${inconsolata.className} antialiased bg-primary text-primary-foreground`}
       >
         <AgeBanner/>
-         <main className="min-h-screen py-6 px-6 lg:px-16"> 
+        <CookiesBanner/>
+         <main className="flex flex-col min-h-screen justify-center space-y-6 py-6 px-6 lg:px-16"> 
             <Navbar/>
             {children}
-            
+            <Footer/>
+            <Toaster
+          toastOptions={{
+            style: {
+              textAlign: "center",
+            }
+          }}
+        />
         </main>
       </body>
     </html>

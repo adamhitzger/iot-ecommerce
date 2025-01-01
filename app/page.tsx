@@ -1,10 +1,11 @@
-import Image from "next/image";
 import { Products, Categories, Banners } from "@/types";
 import { BANNERS, CATEGORIES, PRODUCTS } from "@/sanity/lib/queries";
 import { sanityFetch } from "@/sanity/lib/client";
 import { Slider} from "@/components/banners";
 import ProductsGrid  from "@/components/productsgrid";
 import About from "@/components/about";
+import Newsletter from "@/components/newsletter";
+
 export default async function Home() {
   const productsPromise = await sanityFetch<Products>({query: PRODUCTS});
   const bannersPromise = await sanityFetch<Banners>({query: BANNERS});
@@ -19,6 +20,7 @@ export default async function Home() {
     <div className="space-y-8">
       <Slider slides={banners}/> 
       <ProductsGrid products={products} categories={categories}/>
+      <Newsletter/>
       <About/>
     </div>
   );
