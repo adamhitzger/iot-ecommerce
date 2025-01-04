@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import React , { ReactNode } from "react";
 
 type Country = "Slovenská republika" | "Česká republika";
 type Status = "Přijatá"| "Zaplacená" |"Odeslaná"| "Vyzvednutá"| "Zrušená"| "Vrácení";
@@ -7,10 +7,6 @@ interface OrderedItem {
     _type: "orderedItem";
     productId: string;
     quantity: number;
-}
-
-interface Slug {
-   current: string;
 }
 
 export interface Newsletter {
@@ -34,15 +30,44 @@ export interface Order {
     status: Status;
     orderedProducts: OrderedItem[];
 }
+type RGB = {
+    r: number,
+        g: number,
+        b: number,
+        a: number,
+}
+type Color = {
+    rgb: RGB;
+}
+
+type Terpen = {
+    t_name: string;
+    slug: string;
+    color: Color;
+}
+type Var = {
+    v_name: string;
+    slug: string;
+    price_b2c: number;
+    price_b2b: number;
+    
+}
+
+type Terpens = Terpen[];
+type Vars = Var[];
 
 export interface Product {
+    _id: string;
     name: string;
     overview: string;
-    slug: Slug;
-    price: number;
+    sale: number;
+    slug: string;
+    terpens: Terpens;
     details: any;
     picture: string;
     pictures: string[];
+    terpens: Terpens;
+    variants: Vars;
     quantity: number;
     category: Category;
     file: string;
@@ -58,7 +83,7 @@ export interface Review {
 
 export interface Category {
     name: string;
-    slug: Slug;
+    slug: string;
     picture: string;
 }
 
@@ -81,12 +106,13 @@ export interface Route extends Href {
 
   export interface Coupon {
     code: string;
-    percentage: number;
+    isPercentage: boolean;
+    value: number;
     free_del: boolean;
   }
 
 export interface Card {
-    icon: React.Component;
+    icon: React.ReactNode;
     heading: string;
     text: string;
 }

@@ -2,7 +2,7 @@ import { Products, Categories, Banners } from "@/types";
 import { BANNERS, CATEGORIES, PRODUCTS } from "@/sanity/lib/queries";
 import { sanityFetch } from "@/sanity/lib/client";
 import { Slider} from "@/components/banners";
-import ProductsGrid  from "@/components/productsgrid";
+import ProductsGrid, { CategoriesGrid }  from "@/components/productsgrid";
 import About from "@/components/about";
 import Newsletter from "@/components/newsletter";
 
@@ -19,7 +19,8 @@ export default async function Home() {
   return (
     <div className="space-y-8">
       <Slider slides={banners}/> 
-      <ProductsGrid products={products} categories={categories}/>
+      <ProductsGrid products={products} />
+      <CategoriesGrid categories={categories}/>
       <Newsletter/>
       <About/>
     </div>

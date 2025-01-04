@@ -1,10 +1,10 @@
 import { defineType, defineField } from "sanity"
-import { BlockContentIcon } from "@sanity/icons"
+import { StarIcon } from "@sanity/icons"
 export const coupon = defineType({
     name: "coupons",
     title: "Kupony",
     type: "document",
-    icon: BlockContentIcon,
+    icon: StarIcon,
     fields: [
         defineField({
             type: "string",
@@ -12,9 +12,14 @@ export const coupon = defineType({
             name: "code", 
         }),
         defineField({
+            type: "boolean",
+            title:"Sleva v korunách/procentech",
+            name: "isPercentage", 
+        }),
+        defineField({
             type: "number",
-            title:"Sleva v procentech",
-            name: "percentage", 
+            title:"Hodnota slevy",
+            name: "value", 
         }),
         defineField({
             type: "boolean",

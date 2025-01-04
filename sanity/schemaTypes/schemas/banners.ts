@@ -1,10 +1,10 @@
 import { defineType, defineField } from "sanity"
-import { BlockContentIcon } from "@sanity/icons"
+import { ImageIcon } from "@sanity/icons"
 export const banner = defineType({
     name: "banners",
     title: "Bannery",
     type: "document",
-    icon: BlockContentIcon,
+    icon: ImageIcon,
     fields: [
         defineField({
             type: "string",

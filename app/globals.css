@@ -63,5 +63,22 @@
   body {
     @apply bg-background text-foreground;
   }
+  ol > li > span {
+    @apply underline text-lg underline-offset-2
+  }
+  ol > li > ul
+  {
+    @apply list-decimal px-4
+  }
+  ol > li > ul > li > ul
+  {
+    @apply list-disc px-4
+  }
+  form > div {
+    @apply flex flex-col space-y-2 w-full
+  }
+  form > div >label {
+    @apply underline underline-offset-2
+  }
 }
 

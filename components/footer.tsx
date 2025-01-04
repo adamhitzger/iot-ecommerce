@@ -35,7 +35,7 @@ export default function Footer(){
                 
             </div>
         </footer>
-            <span className="text-xl text-center ">2025 <Link href={"/"} className="underline">Adam Hitzger</Link></span>
+            <span className="text-xl text-center ">{year} <Link href={"/"} className="underline">Adam Hitzger</Link></span>
         </>
     )
 }

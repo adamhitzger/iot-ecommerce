@@ -5,13 +5,11 @@ import { MenuIcon } from "lucide-react";
 import {
     Sheet,
     SheetContent,
-    SheetDescription,
-    SheetHeader,
-    SheetTitle,
     SheetTrigger,
   } from "@/components/ui/sheet" 
 import { Href} from "@/types";
 import { navLinks } from "@/constant";
+import Basket from "./basket";
 
 export default function Navbar() {
     
@@ -28,20 +26,7 @@ export default function Navbar() {
             ))}
             </div>
             <div className="flex flex-row items-center space-x-4 ml-4">
-            <Sheet>
-            <SheetTrigger>
-            <Image src={"/images/bong.svg"} alt="Bong logo hydroocannu" width={36} height={36}/>
-                </SheetTrigger>
-                <SheetContent side={"left"}>
-                 <SheetHeader>
-                <SheetTitle>Váš košík</SheetTitle>
-                <SheetDescription>
-        This action cannot be undone. This will permanently delete your account
-        and remove your data from our servers.🤨
-                </SheetDescription>
-                </SheetHeader>
-         </SheetContent>
-            </Sheet>
+            <Basket/>
 
             <div className="md:hidden">
             <Sheet>

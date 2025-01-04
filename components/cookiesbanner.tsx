@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useTransition } from 'react'
-import { X } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Checkbox } from '@/components/ui/checkbox'
 import toast from 'react-hot-toast'
@@ -11,24 +10,24 @@ export default function CookiesBanner() {
     const [isVisible, setIsVisible] = useState(false)
     const [isPending, startTransition] = useTransition();
     useEffect(() => {
-        const hasAgreed = localStorage.getItem('provoz')
+        const hasAgreed = localStorage.getItem('provoz') === "on"
         if (!hasAgreed) {
             setIsVisible(true)
         }
     }, [])
 
-    
+    function setData(formData: FormData) {
+      const personal = formData.get("personal");
+      localStorage.setItem('personal', String(personal))
+      const provoz = formData.get("provoz");
+      localStorage.setItem('provoz', String(provoz))
+      const analytics = formData.get("analytics");
+      localStorage.setItem('analytics', String(analytics))
+    }
     
     const setCookie= (formData: FormData) => {
         startTransition(async () => {
-            await function setData(formData: FormData) {
-              const personal = formData.get("personal");
-              localStorage.setItem('personal', personal)
-              const provoz = formData.get("provoz");
-              localStorage.setItem('provoz', provoz)
-              const analytics = formData.get("analytics");
-              localStorage.setItem('analytics', 'analytics')
-            }
+            setData(formData)
             toast.success("Děkujeme");
             
         })
@@ -48,30 +47,30 @@ export default function CookiesBanner() {
                     <form action={setCookie} className='flex flex-col space-y-4'>
                    
     <div className="flex items-center space-x-2">
-      <Checkbox id="personal" />
+      <Checkbox id="personal" name="personal"/>
       <label
         htmlFor="personal"
-        name="personal"
+        
         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 "
       >
         Uložení preferencí uživatele
       </label>
     </div>
     <div className="flex items-center space-x-2">
-      <Checkbox id="provoz" checked/>
+      <Checkbox id="provoz" name="provoz" checked/>
       <label
         htmlFor="provoz"
-        name="provoz"
+        
         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
       >
         Umožnění provozu stránky
       </label>
     </div>
     <div className="flex items-center space-x-2">
-      <Checkbox id="analytics" />
+    <Checkbox id="analytics" name="analytics" />
       <label
         htmlFor="analytics"
-        name="analytics"
+        
         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
       >
         Shromažďování analytických údajů 

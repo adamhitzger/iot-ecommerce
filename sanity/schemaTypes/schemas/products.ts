@@ -17,6 +17,8 @@ export const product = defineType({
             title:"Náhledový text",
             name: "overview", 
         }),
+        defineField({name: "sale", title: "Sleva v procentech", type: "number"}),
+                    
         defineField({
             type: "slug",
             title: "URL adresa",
@@ -24,12 +26,6 @@ export const product = defineType({
             options: {
                 source: "name"
             }
-        }),
-        defineField({
-            type: "number",
-            title:"Cena",
-            name: "price", 
-            validation: rule => rule.required().integer().positive()
         }),
         defineField({
             type: "array",
@@ -54,6 +50,47 @@ export const product = defineType({
                 defineArrayMember({
                     type: "image"
                 }),
+            ]
+        }),
+        defineField({
+            type: "array",
+            title: "Příchutě",
+            name: "terpens",
+            of: [
+                defineArrayMember({
+                    type: "object",
+                        title: "Příchuť",
+                        name: "terpen",
+                        fields: [
+                           defineField({name: "t_name", title: "Název příchutě", type: "string"}),
+                           defineField({name: "value", title: "Hodnota", type: "slug", options: {source: (doc, context) => {
+                            const parent = context.parent as { t_name?: string };
+                            return parent?.t_name || "";
+                          }}}),
+                            defineField({name: "color", title: "Barva příchutě", type: "color"}),  
+                        ]
+                })
+            ]
+        }),
+        defineField({
+            type: "array",
+            title: "Varianty",
+            name: "variants",
+            of: [
+                defineArrayMember({
+                    type: "object",
+                    title: "Varianta",
+                    name: "var",
+                    fields: [
+                        defineField({name: "v_name", title: "Název varianty", type: "string"}),
+                            defineField({name: "value", title: "Hodnota", type: "slug", options: {source: (doc, context) => {
+                            const parent = context.parent as { v_name?: string };
+                            return parent?.v_name || "";
+                          }}}),
+                          defineField({name: "price_b2c", title: "Cena pro zákazníky", type: "number", validation: rule => rule.required().integer().positive()}),
+                          defineField({name: "price_b2b", title: "Velkoobchodní cena", type: "number", validation: rule => rule.required().integer().positive()}),
+                          ]
+                })
             ]
         }),
         defineField({

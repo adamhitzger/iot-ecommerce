@@ -3,23 +3,23 @@ import { ShoppingBagIcon, CheckCircle2Icon } from "lucide-react";
 
 export const navLinks: Links = [
     {
-        route: "/categories?name=bongy",
+        route: "/products?name=bongy",
         name: "Bongy"
     },
     {
-        route: "/categories?name=papirky-a-filtry",
+        route: "/products?name=papirky-a-filtry",
         name: "Papírky a filtry"
     },
     {
-        route: "/categories?name=fajfky",
+        route: "/products?name=fajfky",
         name: "Fajfky"
     },
     {
-        route: "/categories?name=kosmetika",
+        route: "/products?name=kosmetika",
         name: "Kosmetika"
     },
     {
-        route: "/categories?name=blunty",
+        route: "/products?name=blunty",
         name: "Blunty"
     }
 ]

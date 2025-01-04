@@ -6,6 +6,7 @@ import AgeBanner from "@/components/agebanner";
 import Footer from "@/components/footer";
 import CookiesBanner from "@/components/cookiesbanner";
 import { Toaster } from "react-hot-toast";
+import { CartProvider } from "@/lib/card";
 
 const inconsolata = Inconsolata({
   subsets: ["latin"],
@@ -13,8 +14,32 @@ const inconsolata = Inconsolata({
 })
 
 export const metadata: Metadata = {
-  title: "Hydroocann",
+  title: `Hydroocann Natural s.r.o.`,
   description: "Všechny potřebné kuřácké potřeby",
+  icons: {
+    icon: "/images/logo.png"
+  },
+  applicationName: "Hydroocann Natural s.r.o.",
+  generator: "Next.ts",
+  authors: [{name: "Adam Hitzger"}, {name: "Ivan Čmiko"}],
+  keywords: [
+     "Bongy", "Papírky a filtry"
+    ],
+creator: "Adam Hitzger",
+        publisher: "Adam Hitzger",
+        formatDetection: {
+            email: false,
+            address: false,
+            telephone: false,
+          },
+openGraph: {
+  title: `HydrooCann Natural s.r.o.`,
+  description: "Všechny potřebné kuřácké potřeby",
+  url: `https://www.hydroocann.com/`,
+  siteName: "HydrooCann Natural s.r.o.",
+  locale: "cs_CZ",
+  type: "website",
+}
 };
 
 export default function RootLayout({
@@ -23,6 +48,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <CartProvider>
     <html lang="en">
       <body
         className={`${inconsolata.className} antialiased bg-primary text-primary-foreground`}
@@ -43,5 +69,6 @@ export default function RootLayout({
         </main>
       </body>
     </html>
+    </CartProvider>
   );
 }
