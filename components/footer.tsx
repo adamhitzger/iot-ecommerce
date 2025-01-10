@@ -8,7 +8,7 @@ export default function Footer(){
     const year: number = new Date().getFullYear()
     return(
         <>
-        <footer className="p-5 rounded-lg grid grid-cols-1 sm:grid-cols-3 gap-10 bg-secondary-foreground justify-items-center">
+        <footer className="p-5 rounded-xl grid grid-cols-1 sm:grid-cols-3 gap-10 bg-secondary-foreground  sm:justify-items-center">
             <div className="flex text-lg flex-col">
                 <h3 className="text-xl font-bold underline underline-offset-2">Máte nějaký dotaz ?</h3>
                 <Link href={"mailto:info@hydroocann.com"}>info@hydroocann.com</Link>

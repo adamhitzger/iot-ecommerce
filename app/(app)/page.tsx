@@ -17,12 +17,12 @@ export default async function Home() {
   ])
   
   return (
-    <div className="space-y-8">
+    <>
       <Slider slides={banners}/> 
       <ProductsGrid products={products} />
       <CategoriesGrid categories={categories}/>
       <Newsletter/>
       <About/>
-    </div>
+      </>
   );
 }

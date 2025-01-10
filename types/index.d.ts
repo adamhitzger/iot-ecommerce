@@ -3,32 +3,71 @@ import React , { ReactNode } from "react";
 type Country = "Slovenská republika" | "Česká republika";
 type Status = "Přijatá"| "Zaplacená" |"Odeslaná"| "Vyzvednutá"| "Zrušená"| "Vrácení";
 
-interface OrderedItem {
-    _type: "orderedItem";
-    productId: string;
+export interface Contact {
+    _type: "contact";
+    name: string;
+    email: string;
+    tel: string;
+    msg: string;
+    ltd?: string;
+}
+
+export interface ActionResponse<T> {
+    success: boolean
+    message: string;
+    errors?: {
+        [K in keyof T]?: string[];
+      };
+    inputs?: T 
+}
+
+export interface OrderedItem {
+    _type: string;
+    productId: { _type: string, _ref: string };
+    price: number;
     quantity: number;
+    terpens: string;
+    variant: string;
+    name?: string;
 }
 
 export interface Newsletter {
+    _type: "newsletter";
     email: string;
     name: string;
     surname: string;
 }
 
 export interface Order {
+    _id?: string;
+    _type: "orders";
     email: string;
     name: string;
     surname: string;
     phone: string;
-    country: Country;
+    country: string;
     region: string;
-    postalCode: number;
+    postalCode: string;
     address: string;
     total: number;
+    date: string;
+    city: string;
     packetaId: number;
-    barcode: string;
+    barcode?: string;
     status: Status;
-    orderedProducts: OrderedItem[];
+    cod: string;
+    orderedProducts?: OrderedItem[];
+    invoice?: string;
+    couponValue: number;
+}
+
+export interface BarcodeSend {
+    email: string;
+    name: string;
+    surname: string;
+    phone: string;
+    packetaId: number;
+    total: number;
 }
 type RGB = {
     r: number,
@@ -58,8 +97,11 @@ type Vars = Var[];
 
 export interface Product {
     _id: string;
+    _type: string;
+    
     name: string;
     overview: string;
+    keywords: string;
     sale: number;
     slug: string;
     terpens: Terpens;
@@ -70,15 +112,30 @@ export interface Product {
     variants: Vars;
     quantity: number;
     category: Category;
+    product: Products;
     file: string;
     tutorial: string[];
+   
+}
+
+export interface basketItem{
+    name:  string;
+     _id: string;
+     price:  number;
+     terpen:  string;
+     quantity:  number;
+     variant: string;
 }
 
 export interface Review {
+    _type: string;
     name: string;
     review: string;
     rating: number;
-    procuct: string;
+    product: {
+        _type: "reference",
+        _ref: string
+    };
 }
 
 export interface Category {
@@ -92,6 +149,7 @@ export interface Banner {
     imageUrl: string;
     text: string;
     category: Category;
+    product: Product;
 }
 
 
@@ -106,7 +164,6 @@ export interface Route extends Href {
 
   export interface Coupon {
     code: string;
-    isPercentage: boolean;
     value: number;
     free_del: boolean;
   }

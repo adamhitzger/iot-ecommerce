@@ -80,5 +80,15 @@
   form > div >label {
     @apply underline underline-offset-2
   }
+  h1{
+    @apply underline decoration-wavy decoration-secondary underline-offset-8
+  }
+}
+
+[data-input][type="number"]::-webkit-inner-spin-button, 
+[data-input][type="number"]::-webkit-outer-spin-button {  
+   -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    appearance: textfield;
 }
 

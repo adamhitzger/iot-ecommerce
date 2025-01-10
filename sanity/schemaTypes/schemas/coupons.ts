@@ -12,11 +12,6 @@ export const coupon = defineType({
             name: "code", 
         }),
         defineField({
-            type: "boolean",
-            title:"Sleva v korunách/procentech",
-            name: "isPercentage", 
-        }),
-        defineField({
             type: "number",
             title:"Hodnota slevy",
             name: "value", 

@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from 'react'
 import { X } from 'lucide-react'
 import { useCart } from '@/lib/card'
 import { Button } from "@/components/ui/button"
@@ -11,10 +10,10 @@ import Link from 'next/link'
 
 export default function Basket() {
     const { items, removeItem, updateQuantity, total, clearCart } = useCart()
-    const [isOpen, setIsOpen] = useState(false)
+   // const [isOpen, setIsOpen] = useState(false)
 
     return (
-        <Sheet open={isOpen} onOpenChange={setIsOpen}>
+        <Sheet >
             <SheetTrigger asChild>
                 <div className="relative px-5">
                     <Image height={32} width={32} src={"/images/bong.svg"} alt='Bong logo Hydroocann Natural' />
@@ -26,7 +25,7 @@ export default function Basket() {
                     <span className="sr-only">Open cart</span>
                 </div>
             </SheetTrigger>
-            <SheetContent className="w-full sm:max-w-lg">
+            <SheetContent className=" sm:max-w-lg">
                 <SheetHeader>
                     <SheetTitle>Váš košík</SheetTitle>
                 </SheetHeader>
@@ -34,12 +33,12 @@ export default function Basket() {
                     <p className="text-center text-muted-foreground mt-4">je prázdný...</p>
                 ) : (
                     <div className="mt-8 space-y-4">
-                        {items.map((item) => (
-                            <div key={item.id} className="flex items-center justify-between space-x-4">
+                        {items.map((item, i: number) => (
+                            <div key={i} className="flex items-center justify-between space-x-4">
                                 <div className="flex-1">
-                                    <h3 className="text-sm font-medium">{item.name} {item.terpens}</h3>
-                                    <p className="text-sm text-muted-foreground">{item.variant}</p>
-                                    <p className="text-sm text-muted-foreground">{item.price.toFixed(2)} Kč</p>
+                                    <h3 className="text-base font-medium">{item.name} {item.terpens}</h3>
+                                    <p className="text-base text-muted-foreground">{item.variant}</p>
+                                    <p className="text-base text-muted-foreground">{item.price.toFixed(2)} Kč</p>
                                 </div>
                                 <div className="flex items-center space-x-2">
                                     <Input
@@ -62,9 +61,10 @@ export default function Basket() {
                                 <span className="font-medium">{total.toFixed(2)} Kč</span>
                             </div>
                         </div>
-                        <div className="flex justify-between space-x-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 justify-items-center gap-y-2">
+                        <Link href={"/checkout"}><Button>Zaplatit</Button></Link>
                             <Button variant="outline" onClick={clearCart}>Vyčistit košík</Button>
-                            <Link href={"/checkout"}><Button>Zaplatit</Button></Link>
+                            
                         </div>
                     </div>
                 )}

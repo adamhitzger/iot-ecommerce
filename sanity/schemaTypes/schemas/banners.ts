@@ -27,5 +27,11 @@ export const banner = defineType({
             type: "reference",
             to: [{type: "categories"}]
         }),
+        defineField({
+            name: "product",
+            title: "Produkt",
+            type: "reference",
+            to: [{type: "products"}]
+        }),
     ]
 })

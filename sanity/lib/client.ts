@@ -16,17 +16,19 @@ export async function sanityFetch<QueryResponse>({
   perspective = "published",
   stega = perspective === "previewDrafts" ||
     process.env.VERCEL_ENV === "preview",
+  revalidate,
 }: {
   query: string;
   params?: QueryParams;
   perspective?: Omit<ClientPerspective, "raw">;
   stega?: boolean;
+  revalidate?: number
 }) {
-  
+  if(!revalidate) revalidate = 30
   return client.fetch<QueryResponse>(query, params, {
     stega,
     perspective: "published",
     useCdn: true,
-    next: { revalidate: 30 },
+    next: { revalidate:  revalidate},
   });
 }

@@ -20,7 +20,7 @@ export async function generateMetadata(props:{params: Promise<{ slug: string}>})
           authors: [{name: "Adam Hitzger"}, {name: "Ivan Čmiko"}],
           keywords: [
              p.overview, 
-            
+            ...p.keywords
         ],
         creator: "Adam Hitzger",
                 publisher: "Adam Hitzger",
@@ -43,13 +43,13 @@ export async function generateMetadata(props:{params: Promise<{ slug: string}>})
         ],
           locale: "cs_CZ",
           type: "website",
-        }
+        },
     }
 }
 export default async function ProductPage(props: { params: Promise<{ slug: string }> }) {
     const params = await props.params;
     const productPromise = await sanityFetch<P>({ query: PRODUCT, params: params });
-    const reviewsPromise = await sanityFetch<Reviews>({ query: PRODUCT_REVIEWS, params: params });
+    const reviewsPromise = await sanityFetch<Reviews>({ query: PRODUCT_REVIEWS, params: params, revalidate: 10 });
     const [product, reviews] = await Promise.all([
         productPromise,
         reviewsPromise

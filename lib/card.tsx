@@ -1,4 +1,5 @@
-"use client";
+"use client"
+
 import React, { createContext, useContext, useState, useEffect } from 'react'
 
 export type CartItem = {
@@ -25,9 +26,20 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     const [items, setItems] = useState<CartItem[]>([])
     const [total, setTotal] = useState(0)
 
+    // Load cart from localStorage when the component mounts
+    useEffect(() => {
+        const savedCart = localStorage.getItem('cart')
+        if (savedCart) {
+            setItems(JSON.parse(savedCart))
+        }
+    }, [])
+
+    // Recalculate the total whenever items change
     useEffect(() => {
         const newTotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
         setTotal(newTotal)
+        // Save items to localStorage whenever the cart changes
+        localStorage.setItem('cart', JSON.stringify(items))
     }, [items])
 
     const addItem = (newItem: CartItem) => {
@@ -54,6 +66,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
     const clearCart = () => {
         setItems([])
+        localStorage.removeItem('cart') // Remove cart from localStorage when cleared
     }
 
     return (

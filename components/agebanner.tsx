@@ -36,11 +36,11 @@ export default function AgeBanner() {
                     <p className=" mb-6">
                         Obsah na této stránce je určen pro osoby starší 18 let, Je Vám A8 a více let?
                     </p>
-                    <div className="flex justify-end space-x-4">
-                        <Button onClick={() => window.history.back()}>
+                    <div className="grid cols-1 sm:grid-cols-2 justify-items-center gap-3">
+                        <Button className='text-base' onClick={() => window.history.back()}>
                             Ne, není mi 18
                         </Button>
-                        <Button onClick={handleAgree}>
+                        <Button className='text-base' onClick={handleAgree}>
                             Ano, je mi více jak 18
                         </Button>
                     </div>

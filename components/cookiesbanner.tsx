@@ -46,7 +46,7 @@ export default function CookiesBanner() {
                     </p>
                     <form action={setCookie} className='flex flex-col space-y-4'>
                    
-    <div className="flex items-center space-x-2">
+    <div className="flex flex-row items-center space-x-2">
       <Checkbox id="personal" name="personal"/>
       <label
         htmlFor="personal"
@@ -56,7 +56,7 @@ export default function CookiesBanner() {
         Uložení preferencí uživatele
       </label>
     </div>
-    <div className="flex items-center space-x-2">
+    <div className="flex flex-row items-center space-x-2">
       <Checkbox id="provoz" name="provoz" checked/>
       <label
         htmlFor="provoz"
@@ -66,7 +66,7 @@ export default function CookiesBanner() {
         Umožnění provozu stránky
       </label>
     </div>
-    <div className="flex items-center space-x-2">
+    <div className="flex flex-row items-center space-x-2">
     <Checkbox id="analytics" name="analytics" />
       <label
         htmlFor="analytics"

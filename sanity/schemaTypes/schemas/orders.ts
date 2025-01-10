@@ -43,10 +43,9 @@ export const orders = defineType({
             name: "region", 
         }),
         defineField({
-            type: "number",
+            type: "string",
             title: "PSČ",
             name: "postalCode", 
-            validation: rule => rule.positive().integer().min(0),
         }),
         defineField({
             type: "string",
@@ -54,9 +53,30 @@ export const orders = defineType({
             name: "address", 
         }),
         defineField({
+            type: "string",
+            title:"Město",
+            name: "city", 
+        }),
+        defineField({
+            type: "string",
+            title:"Datum vytvoření",
+            name: "date", 
+        }),
+        defineField({
+            name: "cod",
+            title: "Dobírka",
+            type: "string",
+        }),
+        defineField({
             type: "number",
             title:"Celková cena",
             name: "total",
+            validation: rule => rule.positive().integer().min(0), 
+        }),
+        defineField({
+            type: "number",
+            title:"Hodnota kuponu",
+            name: "couponValue",
             validation: rule => rule.positive().integer().min(0), 
         }),
         defineField({
@@ -89,6 +109,11 @@ export const orders = defineType({
                     type: "orderedItem"
                 })
             ]
+        }),
+        defineField({
+            type: "file",
+            title:"Faktura",
+            name: "invoice", 
         }),
     ]
 })

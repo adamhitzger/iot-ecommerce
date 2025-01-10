@@ -18,7 +18,7 @@ export const formUrlQuery = ({ params, key, value}: UrlQueryParams) => {
   currentUrl[key] = value;
 
   return qs.stringifyUrl({
-    url: "/products",
+    url: window.location.pathname,
     query: currentUrl,
   },
   { skipNull: true})

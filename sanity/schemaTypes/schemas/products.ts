@@ -18,7 +18,16 @@ export const product = defineType({
             name: "overview", 
         }),
         defineField({name: "sale", title: "Sleva v procentech", type: "number"}),
-                    
+        defineField({
+            type: "array",
+            title:"SEO klíčová slova",
+            name: "keywords", 
+            of: [
+                defineArrayMember({
+                    type: "string"
+                })
+            ]
+        }),          
         defineField({
             type: "slug",
             title: "URL adresa",
@@ -27,6 +36,8 @@ export const product = defineType({
                 source: "name"
             }
         }),
+
+        
         defineField({
             type: "array",
             title:"Popis",
