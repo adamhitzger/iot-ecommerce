@@ -35,18 +35,16 @@ export default function CheckouPage(){
     })
     const [state, action, ispending] = useActionState(createOrder, actionState)
   
-    useEffect(() => {
-        if (state.errors) {
-          toast.error(state.message);
-        }
-      }, [state.errors, state.message]); 
       useEffect(() => {
-        if (state.success) {
+        if (!state.success) {
+            toast.error(state.message);
+        }else if(state.success){
             toast.success("Úspěšně jste provedli objednávku");
             clearCart();
             redirect("/");
         }
-    }, [state.success, clearCart]); 
+        
+    }, [state.success, clearCart, state.message]); 
     const del = coupon.free_del ? 0 : 89
 
         async function addCoupon(formData: FormData) {
@@ -103,7 +101,7 @@ export default function CheckouPage(){
      return(
         <form className="grid grid-cols-1 md:grid-cols-2 gap-8" autoComplete="on">
             <div className="w-full flex flex-col">
-            <h2 className="text-2xl font-semibold mb-4">Order Summary</h2>
+            <h2 className="text-2xl font-semibold mb-4">Souhrn objednávky</h2>
                     {items.map((item, idx: number) => (
                         <div key={idx} className="flex items-center justify-between mb-4 p-4 border rounded-xl">
                             <div className="flex-1">

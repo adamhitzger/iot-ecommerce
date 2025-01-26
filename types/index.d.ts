@@ -3,6 +3,22 @@ import React , { ReactNode } from "react";
 type Country = "Slovenská republika" | "Česká republika";
 type Status = "Přijatá"| "Zaplacená" |"Odeslaná"| "Vyzvednutá"| "Zrušená"| "Vrácení";
 
+export type User ={
+    id?: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    password?: string;
+    type?: "b2c" | "b2b";
+    ico?: number;
+    sanity_id?: string
+} | null | undefined
+
+export interface SignIn {
+    email: string;
+    password: string;
+}
+
 export interface Contact {
     _type: "contact";
     name: string;

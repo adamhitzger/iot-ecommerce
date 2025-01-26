@@ -8,6 +8,7 @@ import { newsletter } from './schemas/newsletter'
 import { banner } from './schemas/banners'
 import { coupon } from './schemas/coupons'
 import { contact } from './schemas/contacts'
+import { userType } from './schemas/users'
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [product, category, review, orders, orderedItem, newsletter, banner, coupon, contact],
+  types: [product, category, review, orders, orderedItem, newsletter, banner, coupon, contact, userType],
 }

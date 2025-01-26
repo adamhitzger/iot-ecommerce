@@ -63,6 +63,9 @@
   body {
     @apply bg-background text-foreground;
   }
+  form > div > p > a {
+    @apply underline
+  }
   ol > li > span {
     @apply underline text-lg underline-offset-2
   }
@@ -78,10 +81,10 @@
     @apply flex flex-col space-y-2 w-full
   }
   form > div >label {
-    @apply underline underline-offset-2
+    @apply underline underline-offset-2 text-lg
   }
   h1{
-    @apply underline decoration-wavy decoration-secondary underline-offset-8
+    @apply underline decoration-wavy decoration-secondary underline-offset-8 text-4xl font-bold text-center
   }
 }
 

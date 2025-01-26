@@ -4,6 +4,31 @@ import { z} from "zod"
 
 const phoneRegex = new RegExp(/^[0-9]{9}$/)
 
+export const userUpdateSchema = z.object({
+    email: z.string().min(1, {message: "Pole je povinné"}).email("Zadali jste email ve špatném formátu"),
+    last_name: z.string().min(1,{message: "Pole je povinné"}),
+    first_name: z.string().min(1, "Pole je povinné"),
+    ico: z.number().optional()
+})
+
+export const passSchema = z.object({
+    password: z.string().min(8, "Heslo musí obsahovat nejméně 8 znaků"),
+})
+
+
+export const signSchema = z.object({
+    email: z.string().min(1, {message: "Pole je povinné"}).email("Zadali jste email ve špatném formátu"),
+    password: z.string().min(8, "Heslo musí obsahovat nejméně 8 znaků"),
+})
+
+export const userSchema = z.object({
+    email: z.string().min(1, {message: "Pole je povinné"}).email("Zadali jste email ve špatném formátu"),
+    last_name: z.string().min(1,{message: "Pole je povinné"}),
+    first_name: z.string().min(1, "Pole je povinné"),
+    password: z.string().min(8, "Heslo musí obsahovat nejméně 8 znaků"),
+    ico: z.number().optional()
+})
+
 export const orderedSchema = z.object({
     _type: z.string(),
     email: z.string().min(1, {message: "Pole je povinné"}).email("Zadali jste email ve špatném formátu"),

@@ -71,7 +71,7 @@ export function completedOrder({draft, published, onComplete }: DocumentActionPr
             return;
           }
         try{
-            const response = await completed(String(documentData.email));
+            const response = await completed(String(documentData.email), documentData);
             if(!response.ok) throw new Error("Nepodařilo se poslat mail - completed()");
             else 
               alert("Email byl zaslán")
@@ -121,7 +121,7 @@ export function paidOrder({draft, published, onComplete }: DocumentActionProps) 
             //if (!iDokladResponse) throw new Error("Nepodařilo se vytvořit fakturu - createInvoice()");
             //console.log(iDokladResponse)
             if(cod === "false"){
-            //xreate Packeta label
+            //create Packeta label
             const packetaCode = await createPacket({name, surname,email, phone, packetaId, total})
             if(!packetaCode) throw new Error("Nepodařilo se poslat mail - paid()");
             else 
@@ -151,7 +151,7 @@ export function sendOrder({draft, published, onComplete }: DocumentActionProps) 
             return;
           }
         try{
-            const response = await send(String(documentData.email));
+            const response = await send(String(documentData.email), documentData);
             if(!response.ok) throw new Error("Nepodařilo se poslat mail - send()");
             else 
               alert("Email byl zaslán")

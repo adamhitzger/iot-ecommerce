@@ -30,7 +30,7 @@ export function Slider({slides}: {slides: Banners}) {
                 {slides.map((s: Banner, i: number) => (
                     <CarouselItem className="flex flex-wrap w-full gap-y-6 sm:gap-y-0" key={i}>
                         <div className="flex flex-col justify-center space-y-6 w-full md:w-1/2 px-8">
-                            <h1 className="font-bold text-5xl sm:text-7xl">{s.heading}</h1>
+                            <h1 className="font-bold text-left text-5xl sm:text-7xl">{s.heading}</h1>
                             <p className="font-medium text-4xl">{s.text}</p>
                            
                             <Link href={`/products?name=${s.category ? s.category.slug : s.product.slug}`}>

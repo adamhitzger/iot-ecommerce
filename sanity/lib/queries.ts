@@ -92,3 +92,11 @@ export const PRODUCTS_BY_CAT = groq`*[_type == "products" && category->slug.curr
     price,
     "picture": image.asset->url,
 }`
+export const USER_ORDERS = groq`*[_type == "orders" && email == $email]{
+    orderedProducts,
+    "invoice": invoice.asset->url,
+    status,
+    couponValue,
+    total,
+    cod,    
+}`

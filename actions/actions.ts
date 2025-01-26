@@ -2,16 +2,393 @@
 
 import {Builder, Parser} from "xml2js"
 import nodemailer from "nodemailer"
-import { client } from "@/sanity/lib/client";
-import {ActionResponse, BarcodeSend, basketItem, Contact, Coupon, Newsletter, Order, OrderedItem, Review} from "@/types";
+import { client as c } from "@/sanity/lib/client";
+import {ActionResponse,User, BarcodeSend, basketItem, Contact, Coupon, Newsletter, Order,SignIn, OrderedItem, Review} from "@/types";
 import { v4 as uuidv4 } from 'uuid';
 import { sanityFetch } from "@/sanity/lib/client";
 import { FIND_COUPON } from "@/sanity/lib/queries";
 import { SanityDocument } from "next-sanity";
-import { basketSchema, contactSchema, newsletterSchema, orderedSchema, reviewSchema } from "@/lib/schemas"
-import "@/public/inconsolata.js"
+import { basketSchema,passSchema, userUpdateSchema,userSchema,signSchema, contactSchema, newsletterSchema, orderedSchema, reviewSchema } from "@/lib/schemas"
 import puppeteer from 'puppeteer';
+import { createSupabaseClient, protectedRoute, getUser } from "@/auth/server";
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 const axios = require("axios")
+//passed test
+export async function signOut() {
+  await protectedRoute()
+  const { auth } = await createSupabaseClient("deleteAccount");
+  let revalidate = false
+  try{
+    const signOut = await auth.signOut();
+    if(!signOut.error){
+      revalidate = true
+      return{
+      success: true,
+      message: "Byl jste úspěšně odhlášen"
+    }
+    }
+  }catch(error){
+    console.log("Error při odhlašování: ", error)
+    return{
+      success: false,
+      message: "Nepodařilo se Vás odhlásit"
+    }
+  }finally{
+    if(revalidate){
+      revalidatePath("/")
+      redirect("/")
+    }
+  }
+}
+
+export async function updatePass(prevState: ActionResponse<{password: string}>, formData: FormData): Promise<ActionResponse<{password: string}>> {
+  const { auth } = await createSupabaseClient("deleteAccount");
+  let revalidate = false
+  try{
+    await protectedRoute();
+    const password = formData.get("password") as string;
+    //const validatedPass = passSchema.safeParse(password)
+    
+    const {data, error} = await auth.updateUser({
+      password: password
+    })
+    if(error){
+      return{
+      success: false,
+        message: "Nezadali jste správně heslo",
+      }
+    }else{
+    revalidate = true
+    return{
+      success: true,
+      message: "Heslo bylo úspšsně aktualizováno"
+    }
+  }
+  
+  }catch(error){
+    console.error("Error při změně hesla: ", error)
+    return{
+      success: false,
+      message: "Problém při změně hesla",
+      }
+  }finally{
+    if(revalidate){
+      revalidatePath("/user", "page")
+    }
+  }
+}
+//passed test
+export async function deleteAccount() {
+  
+  const { auth } = await createSupabaseClient("deleteAccount");
+  const user = await getUser()
+  try{
+    await protectedRoute()
+    const signOut = await auth.signOut();
+    if(signOut.error) throw signOut.error;
+
+    const {data, error} = await auth.admin.deleteUser(user?.id as string);
+    if(!error){
+      const result = await c.delete(user?.sanity_id as string)
+      return{
+      success: true,
+      message: "Byl jste úspěšně vymazán"
+    }
+    }
+  }catch(error){
+    console.log("Error při mazání účtu: ", error)
+    return{
+      success: false,
+      message: "Nepodařilo se Váš účet vymazat"
+    }
+  }
+}
+
+export async function updateForgotPass(prevState: ActionResponse<SignIn>, formData: FormData): Promise<ActionResponse<SignIn>> {
+  const {auth} = await createSupabaseClient();
+  let redirectPath = ""
+  try{
+    //await protectedRoute()
+    const myData = {
+      email: formData.get("email") as string,
+      password: formData.get("password") as string,
+    }
+    //const password= formData.get("password") as string
+    //const validatedData = signSchema.safeParse(myData  
+      const {data, error} = await auth.updateUser({
+        password: myData.password
+      })
+      if(error){
+        return{
+          success: false,
+          message: "Chyba při vkládání dat.",
+        }
+      }else{
+        redirectPath = "/signin"
+        return {
+          success: true,
+          message: "Vaše heslo bylo aktualizováno. Přihlaste se"
+        }
+      }
+    
+  }catch(error){
+    console.error("Error in uodate forgot password: ", error)
+    return {
+      success: false,
+      message: "Chyba při aktualizaci hesla."
+    }
+  }finally{
+    if(redirectPath){
+      revalidatePath("/update-pass")
+      redirect(redirectPath)
+    }
+  }
+}
+//passed test
+export async function forgotPass(prevState: ActionResponse<{email: string}>, formData: FormData): Promise<ActionResponse<{email: string}>> {
+  const client = await createSupabaseClient()
+  let revalidate = false;
+  try{
+    const email = formData.get("email") as string;  
+    const { data,error } = await client.auth.resetPasswordForEmail(
+        email
+      );
+      if(error){
+        return {
+          success: false,
+          message: "Nepodařilo se zaslat mail",
+          inputs: {email}
+        }
+      }else {
+        revalidate=true
+        return {
+          success: true,
+          message: "Zkontrolujte emailovou schránku"
+        }
+      }
+  }catch(error){
+    console.log(error)
+    return {
+      success: false,
+      message: "Nepodařilo se zaslat mail",
+    }
+  }finally{
+    if(revalidate) revalidatePath("/signin")
+  }
+}
+//passed test
+export async function signInFn(prevState: ActionResponse<SignIn>, formData: FormData): Promise<ActionResponse<SignIn>> {
+  const client = await createSupabaseClient()
+  let redirectPath = "";
+  try {
+    const data = {
+    email: formData.get("email") as string,
+      password: formData.get("pass") as string,
+  }
+
+  const validatedData = signSchema.safeParse(data)
+    
+  if (!validatedData.success) {
+    return {
+      success: false,
+      message: 'Nevyplnili jste dobře všechny údaje údaje',
+      errors: validatedData.error.flatten().fieldErrors,
+      inputs: validatedData.data
+    }
+  }else{
+    const {error} = await client.auth.signInWithPassword(validatedData.data)
+    if(error){
+      return {
+        success: false,
+      message: 'Nevyplnili jste dobře všechny údaje údaje',
+      inputs: validatedData.data
+      }
+    }
+    redirectPath = "/user"
+    return {
+      success: true,
+      message: 'Byl jste úspěšně přihlášen!',
+    }
+  }
+
+  }catch(error){
+    console.log(error)
+    return{
+      success: false,
+        message: 'Problém s přihlášením zákazníka',
+    }
+  }finally{
+    if(redirectPath){
+      revalidatePath("/signin")
+      redirect(redirectPath)
+    } 
+  }
+}
+//passed test
+export async function signUp(prevState: ActionResponse<User>, formData: FormData): Promise<ActionResponse<User>> {
+  const client = await createSupabaseClient()
+  let type="";
+  let revalidate = false;
+  try{
+    const data = {
+      first_name: formData.get("name") as string,
+      last_name: formData.get("surname") as string,
+      email: formData.get("email") as string,
+      password: formData.get("pass") as string,
+      ico: Number(formData.get("ico"))
+    }
+
+    const validatedData = userSchema.safeParse(data);
+    
+    if (!validatedData.success) {
+      return {
+        success: false,
+        message: 'Nevyplnili jste dobře všechny údaje údaje',
+        errors: validatedData.error.flatten().fieldErrors,
+        inputs: validatedData.data
+      }
+    }else {
+      console.log(validatedData.data)
+      const {first_name, last_name, ico, password, email} = validatedData.data
+      if(ico && ico > 1000){
+        const isEnt = await axios.get(`https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/${ico}` ,{"Content-Type": "application/json",})
+        console.log(isEnt)
+        if(isEnt.status === 200) type="b2b" ;
+        console.log(type)
+      }else{
+         type="b2c"
+      }
+
+      const {data, error} = await client.auth.signUp({
+        email,
+        password,
+      })
+      if(error){
+        console.log(error)
+        return {
+          success: false,
+          message: 'Nepovedlo se vytvořit účet',
+          inputs: validatedData.data
+        }
+      }else{
+        const result = await c.create({
+          _type: "users",
+          email: email
+        })
+        const create_user = await client.from("profiles").insert({
+          id: data.user?.id,first_name: first_name, last_name: last_name, type: type, ico: ico, sanity_id: result._id
+        })
+        console.log(create_user.statusText)
+        if(create_user.error){
+          revalidate = true
+          return{
+            success: false,
+          message: 'Nepovedlo se vytvořit účet',
+        }
+        }
+        
+        
+         return {
+        success: true,
+        message: 'Byl jste úspěšně registrován! Zaslali jsme Vám ověřovací email. Zkrontrolujte i spam!',
+      }
+      }
+      
+    }
+    
+  }catch(error){
+    console.warn(error); 
+    return{
+      success: false,
+        message: 'Problém s registrací zákazníka',
+    }
+  }finally{
+    if(revalidate){
+      revalidatePath("/signup")
+      redirect("/")
+    }   
+  }
+}
+//passed test
+export async function updateUser(prevState: ActionResponse<User>, formData: FormData): Promise<ActionResponse<User>> {
+  const client = await createSupabaseClient()
+  let type="";
+  let revalidate = false;
+  try{
+    const data = {
+      first_name: formData.get("name") as string,
+      last_name: formData.get("surname") as string,
+      email: formData.get("email") as string,
+      ico: Number(formData.get("ico"))
+    }
+
+    const validatedData = userUpdateSchema.safeParse(data);
+    
+    if (!validatedData.success) {
+      return {
+        success: false,
+        message: 'Nevyplnili jste dobře všechny údaje údaje',
+        errors: validatedData.error.flatten().fieldErrors,
+        inputs: validatedData.data
+      }
+    }else {
+      console.log(validatedData.data)
+      const {first_name, last_name, ico, email} = validatedData.data
+      if(ico && ico > 1000){
+        const isEnt = await axios.get(`https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/${ico}` ,{"Content-Type": "application/json",})
+        console.log(isEnt)
+        if(isEnt.status === 200) type="b2b" ;
+        console.log(type)
+      }else{
+         type="b2c"
+      }
+
+      const {data, error} = await client.auth.updateUser({
+        email,
+      })
+      if(error){
+        console.log(error)
+        return {
+          success: false,
+          message: 'Nepovedlo se změnit údaje.',
+          inputs: validatedData.data
+        }
+      }else{
+        const update_user = await client.from("profiles").update({
+          first_name: first_name, last_name: last_name, type: type, ico: ico
+        }).eq("id", data.user?.id)
+        console.log(update_user.statusText)
+        if(update_user.error){
+          revalidate = true
+          return{
+            success: false,
+          message: 'Nepovedlo se změnit údaje.',
+        }
+        }
+        
+        
+         return {
+        success: true,
+        message: 'Údaje byly úspěšně změněny',
+      }
+      }
+      
+    }
+    
+  }catch(error){
+    console.warn(error); 
+    return{
+      success: false,
+        message: 'Problém s registrací zákazníka',
+    }
+  }finally{
+    if(revalidate){
+      revalidatePath("/user?names=true")
+      redirect("/")
+    }   
+  }
+}
 
 async function getAccessToken() {
   const url = "https://identity.idoklad.cz/server/connect/token";
@@ -130,6 +507,7 @@ export async function validateCoupon(formData: FormData){
 
 export async function createOrder(prevSate: ActionResponse<Order> | null, formData: FormData): Promise<ActionResponse<Order>>{
     let products: OrderedItem[] = [];
+    let revalidate = false;
     try {
         const length = Number(formData.get("length"))
         for (let i = 0; i < length; i++) {
@@ -191,7 +569,7 @@ export async function createOrder(prevSate: ActionResponse<Order> | null, formDa
             const packetaCode = await createPacket({name, surname, email, phone,packetaId, total})
             if(!packetaCode) throw new Error("Nepodařilo se vytvořit štítek");
                 else {
-             const result = await client.create({
+             const result = await c.create({
                 barcode: packetaCode,
                  orderedProducts: products,
                  _type: _type,
@@ -214,7 +592,7 @@ export async function createOrder(prevSate: ActionResponse<Order> | null, formDa
         console.log(result)   
     }
     }else{
-        const result = await client.create({
+        const result = await c.create({
             orderedProducts: products,
             _type: _type,
                  email: email,
@@ -235,9 +613,9 @@ export async function createOrder(prevSate: ActionResponse<Order> | null, formDa
         })
         console.log(result)   
     }
-    const emailResponse = await created(String(email));
+    const emailResponse = await created(String(email), order, products);
     if(!emailResponse.ok) throw new Error("Nepodařilo se poslat mail - paid()");
-    
+    revalidate=true
     return {
         success: true,
         message: 'Objednávka byla vytvořena úspěšně!',
@@ -249,7 +627,12 @@ export async function createOrder(prevSate: ActionResponse<Order> | null, formDa
                 success: false,
                 message: 'Nevyplnili jste požadované údaje.',
               }
-    }  
+    }finally{
+      if(revalidate){
+        revalidatePath("/checkout")
+        redirect("/")
+      }
+    }
 }
 
 export async function createBasket(formData: FormData){
@@ -272,7 +655,7 @@ export async function createBasket(formData: FormData){
       }
       return {
         success: true,
-          message: 'položka byla přidána do košíku',
+          message: 'Položka byla přidána do košíku',
         item: validatedData.data
       }
 }catch(error){
@@ -292,14 +675,170 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-export async function created(email: string){
+function createHtmlOnCreated(data:Order, products: OrderedItem[]): string {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Změna stavu u Vaší objednávky - Hydroocann Natural, s.r.o</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
+    <table cellpadding="0" cellspacing="0" width="100%" style="min-width: 100%; background-color: #f4f4f4;">
+        <tr>
+            <td align="center" style="padding: 40px 0;">
+                <table cellpadding="0" cellspacing="0" width="600" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                    <!-- Header -->
+                    <tr>
+                        <td align="center" style="padding: 40px 0; background-color: #222222; border-top-left-radius: 8px; border-top-right-radius: 8px;">
+                            <h1 style="color: #FFFFFF; font-size: 28px; margin: 0;">Změna stavu Vaší objednávky</h1>
+                        </td>
+                    </tr>
+                    <!-- Content -->
+                    <tr>
+                        <td style="padding: 40px 30px;">
+                            <p style="color: #303030; font-size: 16px; line-height: 1.5; margin-bottom: 20px;">Važený/á/ ${data.name},</p>
+                            <p style="color: #303030; font-size: 16px; line-height: 1.5; margin-bottom: 20px;">Píšeme Vám ohledně změny stavu u Vaší objednávky</p>
+                            
+                            <!-- Status Box -->
+                            <table cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 30px;">
+                                <tr>
+                                    <td align="center" style="background-color: #4C9748; padding: 20px; border-radius: 8px;">
+                                        <h2 style="color: #FFFFFF; font-size: 24px; margin: 0;">Změna stavu na: ${data.status}</h2>
+                                    </td>
+                                </tr>
+                            </table>                          
+                            <!-- Order Details -->
+                            <table cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 30px; border-collapse: collapse;">
+                                <tr style="background-color: #222222; color: #FFFFFF;">
+                                    <th style="padding: 10px; text-align: left; border: 1px solid #303030;">Produkt</th>
+                                    <th style="padding: 10px; text-align: right; border: 1px solid #303030;">Množství</th>
+                                    <th style="padding: 10px; text-align: right; border: 1px solid #303030;">Cena</th>
+                                </tr>
+                                ${products.map((item: OrderedItem) => `
+                                   <tr>
+                                    <td style="padding: 10px; border: 1px solid #303030; color: #303030;">${item.name}</td>
+                                    <td style="padding: 10px; border: 1px solid #303030; color: #303030; text-align: right;">${item.quantity}</td>
+                                    <td style="padding: 10px; border: 1px solid #303030; color: #303030; text-align: right;">${item.price - (item.price/100*data.couponValue)}</td>
+                                </tr>
+                                  `).join("")}
+                                  <tr style="background-color: #f4f4f4;">
+                                    <td colspan="2" style="padding: 10px; border: 1px solid #303030; color: #303030; font-weight: bold; text-align: right;">Sleva:</td>
+                                    <td style="padding: 10px; border: 1px solid #303030; color: red; font-weight: bold; text-align: right;">${data.couponValue} %</td>
+                                </tr>
+                                 <tr style="background-color: #f4f4f4;">
+                                    <td colspan="2" style="padding: 10px; border: 1px solid #303030; color: #303030; font-weight: bold; text-align: right;">Doprava:</td>
+                                    <td style="padding: 10px; border: 1px solid #303030; color: red; font-weight: bold; text-align: right;">${data.couponValue ? "Zadarmo": "89 Kč"}</td>
+                                </tr>
+                                <tr style="background-color: #f4f4f4;">
+                                    <td colspan="2" style="padding: 10px; border: 1px solid #303030; color: #303030; font-weight: bold; text-align: right;">Celková cena:</td>
+                                    <td style="padding: 10px; border: 1px solid #303030; color: #303030; font-weight: bold; text-align: right;">${data.total}</td>
+                                </tr>
+                            </table>                               
+                             <p style="color: #303030; font-size: 14px; line-height: 1.5; margin-top: 30px;">V případě nejasností ohledně Vaší objenávky nás neváhejte kontakt na emailu <strong> <a href="mailto:info@hydroocann.com">info@hydroocann.com</a></strong> na telefonním čísle: <strong> <a href="tel:+420420420420">+420 420 420 420</a></strong></p>
+                      </td>
+                    </tr>
+                    <!-- Footer -->
+                    <tr>
+                        <td align="center" style="padding: 20px 0; background-color: #222222; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
+                            <p style="color: #FFFFFF; font-size: 14px; margin: 0;">© 2025 Hydroocann Natural s.r.o. Všechna práva vyhrazena.</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>`
+}
+
+
+function createHtml(data:SanityDocument): string {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Změna stavu u Vaší objednávky - Hydroocann Natural, s.r.o</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
+    <table cellpadding="0" cellspacing="0" width="100%" style="min-width: 100%; background-color: #f4f4f4;">
+        <tr>
+            <td align="center" style="padding: 40px 0;">
+                <table cellpadding="0" cellspacing="0" width="600" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                    <!-- Header -->
+                    <tr>
+                        <td align="center" style="padding: 40px 0; background-color: #222222; border-top-left-radius: 8px; border-top-right-radius: 8px;">
+                            <h1 style="color: #FFFFFF; font-size: 28px; margin: 0;">Změna stavu Vaší objednávky</h1>
+                        </td>
+                    </tr>
+                    <!-- Content -->
+                    <tr>
+                        <td style="padding: 40px 30px;">
+                            <p style="color: #303030; font-size: 16px; line-height: 1.5; margin-bottom: 20px;">Važený/á/ ${data.name},</p>
+                            <p style="color: #303030; font-size: 16px; line-height: 1.5; margin-bottom: 20px;">Píšeme Vám ohledně změny stavu u Vaší objednávky</p>
+                            
+                            <!-- Status Box -->
+                            <table cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 30px;">
+                                <tr>
+                                    <td align="center" style="background-color: #4C9748; padding: 20px; border-radius: 8px;">
+                                        <h2 style="color: #FFFFFF; font-size: 24px; margin: 0;">Změna stavu na: ${data.status}</h2>
+                                    </td>
+                                </tr>
+                            </table>                          
+                            <!-- Order Details -->
+                            <table cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 30px; border-collapse: collapse;">
+                                <tr style="background-color: #222222; color: #FFFFFF;">
+                                    <th style="padding: 10px; text-align: left; border: 1px solid #303030;">Produkt</th>
+                                    <th style="padding: 10px; text-align: right; border: 1px solid #303030;">Množství</th>
+                                    <th style="padding: 10px; text-align: right; border: 1px solid #303030;">Cena</th>
+                                </tr>
+                                ${data.orderedProducts.map((item: OrderedItem) => `
+                                   <tr>
+                                    <td style="padding: 10px; border: 1px solid #303030; color: #303030;">${item.name}</td>
+                                    <td style="padding: 10px; border: 1px solid #303030; color: #303030; text-align: right;">${item.quantity}</td>
+                                    <td style="padding: 10px; border: 1px solid #303030; color: #303030; text-align: right;">${item.price - (item.price/100*data.couponValue)}</td>
+                                </tr>
+                                  `).join("")}
+                                  <tr style="background-color: #f4f4f4;">
+                                    <td colspan="2" style="padding: 10px; border: 1px solid #303030; color: #303030; font-weight: bold; text-align: right;">Sleva:</td>
+                                    <td style="padding: 10px; border: 1px solid #303030; color: red; font-weight: bold; text-align: right;">${data.couponValue} %</td>
+                                </tr>
+                                <tr style="background-color: #f4f4f4;">
+                                    <td colspan="2" style="padding: 10px; border: 1px solid #303030; color: #303030; font-weight: bold; text-align: right;">Doprava:</td>
+                                    <td style="padding: 10px; border: 1px solid #303030; color: red; font-weight: bold; text-align: right;">${data.couponValue ? "Zadarmo": "89 Kč"}</td>
+                                </tr>
+
+                                <tr style="background-color: #f4f4f4;">
+                                    <td colspan="2" style="padding: 10px; border: 1px solid #303030; color: #303030; font-weight: bold; text-align: right;">Celková cena:</td>
+                                    <td style="padding: 10px; border: 1px solid #303030; color: #303030; font-weight: bold; text-align: right;">${data.total}</td>
+                                </tr>
+                            </table>                               
+                             <p style="color: #303030; font-size: 14px; line-height: 1.5; margin-top: 30px;">V případě nejasností ohledně Vaší objenávky nás neváhejte kontakt na emailu <strong> <a href="mailto:info@hydroocann.com">info@hydroocann.com</a></strong> na telefonním čísle: <strong> <a href="tel:+420420420420">+420 420 420 420</a></strong></p>
+                      </td>
+                    </tr>
+                    <!-- Footer -->
+                    <tr>
+                        <td align="center" style="padding: 20px 0; background-color: #222222; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
+                            <p style="color: #FFFFFF; font-size: 14px; margin: 0;">© 2025 Hydroocann Natural s.r.o. všechna práva vyhrazena.</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>`
+}
+
+export async function created(email:string, data: Order, products: OrderedItem[]){
     let ok = false;
     const mailOptions = {
         from: process.env.FROM_EMAIL,
         to: email,
         subject: "Objednávka přijata",
-        text: "Vaši objednávku jsme přijali. Co nevidět ji zašleme",
-    }
+        html: createHtmlOnCreated(data, products)
+      }
     try{
         const response = await transporter.sendMail(mailOptions);
         if(!response.accepted) ok = false;
@@ -322,6 +861,7 @@ export async function cancelled(email: string){
         to: email,
         subject: "Objednávka zrušena",
         text: "Vaše objednávka byla z nezjištných důvodů zrušena...",
+       
     }
     try{
         const response = await transporter.sendMail(mailOptions);
@@ -359,13 +899,13 @@ export async function refunded(email: string){
     }
 }
 
-export async function completed(email: string){
+export async function completed(email: string, data: SanityDocument){
     let ok = false;
     const mailOptions = {
         from: process.env.FROM_EMAIL,
         to: email,
         subject: "Objednávka dokončena",
-        text: "Vaše objednávka byla vyzvednuta",
+        html: createHtml(data)
     }
     try{
         const response = await transporter.sendMail(mailOptions);
@@ -516,8 +1056,8 @@ async function generatePDF(data: SanityDocument) {
   const pdfBuffer = Buffer.from(await page.pdf({format: "A4"}))
   await browser.close()
     // Upload to Sanity
-    const file = await client.assets.upload("file", pdfBuffer, {
-      filename: `${data.date} - ${data.name} ${data.surname}.pdf`,
+    const file = await c.assets.upload("file", pdfBuffer, {
+      filename: `${data.date}-${data.name}${data.surname}.pdf`,
       contentType: "application/pdf",
     });
   
@@ -531,7 +1071,7 @@ export async function paid(data: SanityDocument){
 
     try{
         const pdf = await generatePDF(data)
-        const order = await client.patch(data._id).set({
+        const order = await c.patch(data._id).set({
             invoice: {
               _type: 'file',
               asset: {
@@ -546,6 +1086,7 @@ export async function paid(data: SanityDocument){
             to: data.email,
             subject: "Objednávka zaplacena",
             text: "Děkujeme za zaplacení Vaší objednávky, předáme ji dopravě",
+            html: createHtml(data),
             attachments: 
             [
                 {
@@ -566,13 +1107,13 @@ export async function paid(data: SanityDocument){
     }
 }
 
-export async function send(email: string){
+export async function send(email: string, data: SanityDocument){
     let ok = false;
     const mailOptions = {
         from: process.env.FROM_EMAIL,
         to: email,
         subject: "Objednávka vyexpedována",
-        text: "Vaše objednávka byla předána dopravci",
+        html: createHtml(data)
     }
     try{
         const response = await transporter.sendMail(mailOptions);
@@ -625,9 +1166,10 @@ const packeta = await fetch("https://www.zasilkovna.cz/api/rest", {
     }
     return packetaCode
     
-  } 
+} 
 
   export async function saveNewsletter(prevState: ActionResponse<Newsletter>,formData: FormData): Promise<ActionResponse<Newsletter>> {
+    let revalidate = false
     try {
        const newsletter: Newsletter = {
         _type: "newsletter",
@@ -645,10 +1187,11 @@ const packeta = await fetch("https://www.zasilkovna.cz/api/rest", {
           inputs: newsletter
         }
       }
-    const result = await client.create({
+    const result = await c.create({
         ...validatedData.data
     })
     console.log("Newsletter created:", result);
+    revalidate=true
     return {
         success: true,
         message: 'Děkujeme za zaslání! Co nejdřív Vám pošleme seznam novinek!',
@@ -659,10 +1202,13 @@ const packeta = await fetch("https://www.zasilkovna.cz/api/rest", {
         success: false,
         message: 'Nepovedlo se odeslat Vaše údaje',
       }
+  }finally{
+    revalidatePath("/", "layout")
   }
   } 
 
   export async function saveContact(prevState: ActionResponse<Contact> | null,formData: FormData): Promise<ActionResponse<Contact>>{
+    let revalidate = false
     try {
     const contact: Contact = {
         _type: "contact",
@@ -682,10 +1228,11 @@ const packeta = await fetch("https://www.zasilkovna.cz/api/rest", {
         }
       }
     
-    const result = await client.create({
+    const result = await c.create({
         ...validatedData.data
     })
     console.log("Contact created:", result);
+    revalidate=true
     return {
         success: true,
         message: 'Děkujeme za zaslání! Co nejdřív vyřešíme Váš požadavek',
@@ -697,11 +1244,15 @@ const packeta = await fetch("https://www.zasilkovna.cz/api/rest", {
         message: 'Nepovedlo se odeslat Váš požadavek',
       }
    
+  }finally{
+    if(revalidate){
+      revalidatePath("/kontakt")
+    }
   }
   } 
 
   export async function saveReview(prevState: ActionResponse<Review>,formData: FormData): Promise<ActionResponse<Review>>{
-    
+    let revalidate = false
     try {
     const review: Review = {
     _type: "reviews",
@@ -723,10 +1274,11 @@ const packeta = await fetch("https://www.zasilkovna.cz/api/rest", {
           inputs: review
         }
       }
-    const result = await client.create({
+    const result = await c.create({
         ...validatedData.data
     })
     console.log("Review created:", result);
+    revalidate=true
     return {
         success: true,
         message: 'Děkujeme za zaslání hodnocení! Po prověření ho zveřejníme',
@@ -738,5 +1290,10 @@ const packeta = await fetch("https://www.zasilkovna.cz/api/rest", {
         success: false,
         message: 'Nepodařilo se odeslat Vaše hodnocení',
       }
+  }finally{
+    if(revalidate){
+      revalidatePath("/products", "layout")
+      redirect("/products")
+    }
   }
   } 
