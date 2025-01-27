@@ -6,13 +6,15 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
+import { useSearchParams } from "next/navigation";
 
 const actionState: ActionResponse<SignIn> = {
     success: false,
     message: "",
 }
 export default function UpdatePass(){
-   
+   const searchParams = useSearchParams()
+   const code = searchParams.get("code") as string
     const [state, action, isPending] = useActionState(updateForgotPass, actionState);
     
     useEffect(() => {
@@ -41,7 +43,7 @@ return(
                             <label htmlFor="password" >Heslo*</label>
                             <Input id="password"  name="password"  type="password" placeholder="Zadejte heslo"/>   
                         </div>
-                        
+                        <input type="hidden" value={code} name="code"/>
                         <div className="flex flex-col col-span-2 items-center justify-end">
                         <Button type="submit" formAction={action}>{isPending ? <Loader2 className="animate-spin"/> : "Odeslat"}</Button>
                         </div>

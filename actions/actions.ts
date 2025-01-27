@@ -110,12 +110,18 @@ export async function updateForgotPass(prevState: ActionResponse<SignIn>, formDa
   let redirectPath = ""
   try{
     //await protectedRoute()
+    const code = formData.get("code") as string
     const myData = {
       email: formData.get("email") as string,
       password: formData.get("password") as string,
     }
     //const password= formData.get("password") as string
     //const validatedData = signSchema.safeParse(myData  
+      const codeExchange = await auth.exchangeCodeForSession(code)
+      if(codeExchange.error) return {
+        success: false,
+        message: "Nepodařilo se Vás ověřit"
+      }
       const {data, error} = await auth.updateUser({
         password: myData.password
       })
