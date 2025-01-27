@@ -1,6 +1,6 @@
 "use client"
 import { ActionResponse, SignIn, } from "@/types";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, Suspense } from "react";
 import { updateForgotPass } from "@/actions/actions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -43,7 +43,9 @@ return(
                             <label htmlFor="password" >Heslo*</label>
                             <Input id="password"  name="password"  type="password" placeholder="Zadejte heslo"/>   
                         </div>
+                        <Suspense>
                         <input type="hidden" value={code} name="code"/>
+                        </Suspense>
                         <div className="flex flex-col col-span-2 items-center justify-end">
                         <Button type="submit" formAction={action}>{isPending ? <Loader2 className="animate-spin"/> : "Odeslat"}</Button>
                         </div>
