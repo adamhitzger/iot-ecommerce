@@ -25,6 +25,7 @@ export default function UpdatePass(){
         }
     }, [state.success, state.message]); 
 return(
+    <Suspense>
     <form className="rounded-xl bg-primary-third p-6 grid grid-cols-2 m-auto w-full md:w-1/2 gap-5 justify-items-center content-end" autoComplete="on">
             <div className="w-full flex flex-col space-y-4  col-span-2">
             <h1>Aktualizace hesla</h1>
@@ -43,13 +44,11 @@ return(
                             <label htmlFor="password" >Heslo*</label>
                             <Input id="password"  name="password"  type="password" placeholder="Zadejte heslo"/>   
                         </div>
-                        <Suspense>
                         <input type="hidden" value={code} name="code"/>
-                        </Suspense>
                         <div className="flex flex-col col-span-2 items-center justify-end">
                         <Button type="submit" formAction={action}>{isPending ? <Loader2 className="animate-spin"/> : "Odeslat"}</Button>
                         </div>
                          </form>
-      
+                         </Suspense>
     )
 }
