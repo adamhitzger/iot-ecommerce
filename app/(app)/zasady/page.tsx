@@ -3,7 +3,7 @@
 export default function Zasady() {
     return(
         <>
-            <h1 className="text-6xl font-bold text -center">Zásady zpracování osobních údajů</h1>
+            <h1 className="font-bold text -center">Zásady zpracování osobních údajů</h1>
             <p className="text-lg">Obchodní společnosti HydrooCann Natural, s.r.o. se sídlem Korunní 2569/108, Praha 10 identifikační číslo: 09706381, zapsané v obchodním rejstříku vedeném u Městského soudu v Praze, oddíl C 339534, vložka MPSH  (dále jen „správce “) tímto v souladu s ustanovením článku 12 a násl. Nařízení Evropského parlamentu a Rady (EU) 2016/679 účinného od 25.5.2018 informuje své zákazníky o zpracování jejich osobních údajů v případě, že využijí jejich služeb.</p>
             <ol className="list-decimal px-8 text-base">
                 <li><span>Osobní údaje</span>

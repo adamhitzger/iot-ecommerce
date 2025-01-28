@@ -46,7 +46,7 @@ export default function PaginationComp({currentPage, totalPages}: Props){
                     )}
                 </PaginationItem>
 
-                {Array.from({ length: totalPages }).map((_, idx) => (
+                {totalPages < 4 && Array.from({ length: totalPages }).map((_, idx) => (
                     <PaginationItem key={idx}>
                         <PaginationLink
                             href="#"

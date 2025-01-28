@@ -3,7 +3,7 @@
 export default function Reklamace() {
     return(
         <>
-            <h1 className="text-6xl font-bold text -center">Reklamační řád</h1>
+            <h1 className=" font-bold text -center">Reklamační řád</h1>
             <ol className="list-decimal px-8 text-base">
                 <li>Kupující je povinen dodané zboží bez zbytečného odkladu prohlédnout a o případných zjištěných vadách do 5 dnů informovat prodávajícího.
                 </li>

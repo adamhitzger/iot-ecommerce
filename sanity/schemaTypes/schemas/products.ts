@@ -13,6 +13,11 @@ export const product = defineType({
             name: "name", 
         }),
         defineField({
+            type: "number",
+            title:"Cena (od)",
+            name: "price", 
+        }),
+        defineField({
             type: "string",
             title:"Náhledový text",
             name: "overview", 

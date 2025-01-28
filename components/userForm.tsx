@@ -40,7 +40,7 @@ export function UserOrderCard({ order }: { order: Order }) {
           <Collapsible open={isOpen} onOpenChange={setIsOpen}>
             <CollapsibleTrigger asChild>
               <Button variant="ghost" className="flex w-full justify-between">
-                Podrobnosti objednávky
+                Souhrn
                 {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
               </Button>
             </CollapsibleTrigger>
@@ -101,6 +101,7 @@ export default function UserForm({user, changePass, changeNames, orders}: {user:
             <div className="w-full  flex flex-col space-y-4 col-span-2">
             <h1>Údaje</h1>
             </div>
+            <div className=" grid grid-cols-1 sm:grid-cols-2 col-span-2 w-full">
                         <div>
                             <label htmlFor="email">Email</label>
                             <Input id="email"  type="text" defaultValue={user?.email} readOnly/>
@@ -115,23 +116,24 @@ export default function UserForm({user, changePass, changeNames, orders}: {user:
                             <Input id="ico" type="text" defaultValue={user?.ico} readOnly/>
                         </div>
                         }
+                              </div> 
                         <div className="col-span-2 ">
-                        <div className="flex space-x-2 justify-center flex-row w-full flex-wrap">
+                        <div className="grid grid-cols-2 grid-rows-2 gap-4 justify-items-center">
                         <Link href={"/user?names=true"}>
-                        <Button type="button"  >{isPending ? <Loader2 className="animate-spin"/> : "Změnit údaje"}</Button>
+                        <Button type="button" size={"sm"}  >{isPending ? <Loader2 className="animate-spin"/> : "Změnit údaje"}</Button>
                         </Link>
                         <Link href={"/user?pass=true"}>
-                        <Button type="button"  >{isPending2 ? <Loader2 className="animate-spin"/> : "Změnit heslo"}</Button>
+                        <Button type="button" size={"sm"} >{isPending2 ? <Loader2 className="animate-spin"/> : "Změnit heslo"}</Button>
                         </Link>
-                        </div>
-                        <div className="flex space-x-2 justify-center flex-row w-full flex-wrap">
-                        <Button type="submit" variant={"outline"} formAction={action}>{isPending ? <Loader2 className="animate-spin"/> : "Odhlásit se"}</Button>
-                        <Button type="submit" variant={"outline"} formAction={action2}>{isPending2 ? <Loader2 className="animate-spin"/> : "Smazat účet"}</Button>
+                       
+                        <Button type="submit" size={"sm"} variant={"outline"} formAction={action}>{isPending ? <Loader2 className="animate-spin"/> : "Odhlásit se"}</Button>
+                        <Button type="submit" size={"sm"} variant={"outline"} formAction={action2}>{isPending2 ? <Loader2 className="animate-spin"/> : "Smazat účet"}</Button>
                         
                         </div>
                         </div>
                         
         </form>
+
         <div className="flex space-y-4 flex-col rounded-xl bg-primary-third p-6">
         <h1>Objednávky</h1>
       {orders.length > 0 ? (

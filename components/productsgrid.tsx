@@ -12,9 +12,9 @@ import { CardContainer, CardItem } from "./ui/3d-card";
 export default function ProductsGrid({products}:{products: Products}){
  return (
     <section className="w-full flex flex-col items-center space-y-4 text-center">
-    <h1 className=" text-6xl font-bold">Nové produkty</h1>
+    <h1 className=" font-bold">Nové produkty</h1>
     <p className="text-xl lg:text-2xl md:w-3/4  font-light">Naskladněné produkty připravené k pro Vás. Uplatněte slevový kupón a objednejte domů. Naskladněné produkty připravené k pro Vás. Uplatněte slevový kupón a objednejte domů.</p>
-    <div className="w-full gap-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 justify-items-center">
+    <div className="w-full gap-4 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 justify-items-center">
         {products.length>0 ? products.map((p: P, i: number) => (
            <Product p={p} key={i}/>
         )) : <p className="text-center text-xl font-bold text-primary-foreground">Nebyly nalezeny žádné produkty</p>}
@@ -26,7 +26,7 @@ export default function ProductsGrid({products}:{products: Products}){
 export function CategoriesGrid({categories}:{categories: Categories}){
     return(
         <section className="w-full flex flex-col space-y-4 text-center">
-        <h1 className=" text-6xl font-bold text-center">Kategorie</h1>
+        <h1 className=" font-bold text-center">Kategorie</h1>
     <div className="w-full justify-items-center grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
         {categories.map((c: C, i: number) => (
             <Suspense key={i}>
@@ -54,8 +54,10 @@ export function Product({p}: {p: P}) {
             </CardItem>
             
             <CardItem translateZ={60} className="text-left w-full flex flex-col">
-            <h2 className=" text-xl font-bold underline decoration-wavy underline-offset-4">{p.name}</h2>
-            <p>{p.overview}</p>
+            <h2 className=" text-xl font-bold underline decoration-wavy decoration-secondary underline-offset-4">{p.name}</h2>
+            <div className="flex flex-row text-xl md:text-2xl font-medium space-x-3">
+                    <span className={`${p.sale ? "text-red-600 line-through font-bold" : null}`}>{p.price} Kč</span> {p.sale ? <span>{(1-(p.sale/100)) * p.price } Kč</span> : null}
+            </div>
             </CardItem>
         </CardContainer>
         </Link>
@@ -94,7 +96,7 @@ export function Category({c}: {c: C}) {
             <CardContainer    onClickCapture={() => handleTypeClick(String(c.slug))}  className="text-center flex flex-col items-center rounded-full p-5 w-40 bg-secondary-foreground">
                 <CardItem translateZ={30} >
                 <Image src={c.picture} alt={c.name} width={100} height={100}/>
-                <h2 className=" text-xl font-bold underline underline-offset-4 decoration-wavy">{c.name}</h2>
+                <h2 className=" text-xl font-bold underline underline-offset-4 decoration-wavy decoration-secondary">{c.name}</h2>
             
                 </CardItem>
             </CardContainer>

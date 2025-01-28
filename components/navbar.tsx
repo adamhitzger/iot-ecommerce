@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { MenuIcon } from "lucide-react";
+import { MenuIcon, User } from "lucide-react";
 import {
     Sheet,
     SheetContent,
@@ -10,6 +10,7 @@ import {
 import { Href} from "@/types";
 import { navLinks } from "@/constant";
 import Basket from "./basket";
+import { redirect } from "next/navigation";
 
 export default function Navbar() {
     
@@ -27,7 +28,9 @@ export default function Navbar() {
             </div>
             <div className="flex flex-row items-center space-x-4 ml-4">
             <Basket/>
-
+            
+            <User className="w-10 h-10" onClick={() => redirect("/user")}/>
+            
             <div className="md:hidden">
             <Sheet>
             <SheetTrigger>
@@ -42,6 +45,7 @@ export default function Navbar() {
                     {n.name}
                 </Link>
             ))}
+
          </SheetContent>
             </Sheet>
             </div>

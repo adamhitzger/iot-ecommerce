@@ -19,7 +19,7 @@ export default function Password(){
     const [state, action, isPending] = useActionState(updatePass, actionState);
     
     useEffect(() => {
-        if (!state.success) {
+        if (!state.success && state.message) {
             toast.error(state.message);
         }else{
           toast.success(state.message);

@@ -28,6 +28,7 @@ export default function SignUpPage(){
             <h1>Registrace</h1>
             <span>Povinné údaje: *</span>
             </div>
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 col-span-2">
             <div>
                             <label htmlFor="name">Jméno*</label>
                             <Input id="name" name="name" type="text" defaultValue={state?.inputs?.first_name} placeholder="Zadejte jméno"/>
@@ -78,9 +79,10 @@ export default function SignUpPage(){
                         <div className="flex flex-col items-center justify-end">
                         <Button type="submit" formAction={action}>{isPending ? <Loader2 className="animate-spin"/> : "Odeslat"}</Button>
                         </div>
+                        </div>
                         <div className="w-full col-span-2 text-center text-sm">
-                            <p>Přihlášením k odběru souhlasíte se zpracováním osobních údajů. Více informací <Link href="/souhlas">zde</Link>.</p>
-                            <p>Máte vytvořený účet? Přihlaste se <Link href="/signin"> zde</Link></p>
+                            <p>Přihlášením k odběru souhlasíte se zpracováním osobních údajů. Více informací <Link className="underline decoration-wavy decoration-secondary" href="/souhlas">zde</Link>.</p>
+                            <p>Máte vytvořený účet? Přihlaste se <Link className="underline decoration-wavy decoration-secondary" href="/signin"> zde</Link></p>
                         </div>
         </form>
     )

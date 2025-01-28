@@ -36,7 +36,7 @@ export default function ProductComponent({product, reviews}: {product: Product, 
         variants
     } = product;
     const allPictures = [picture, ...pictures]
-    //const [isPending, startTransition] = useTransition();
+    
     const [curImg, setCurImg] = useState<number>(0);
     const [price, setPrice] = useState<number>(variants[0]?.price_b2c || 0);
     
@@ -64,16 +64,14 @@ export default function ProductComponent({product, reviews}: {product: Product, 
     }
    const [state2, action2, isPending2] = useActionState(saveReview, reviewState)
    useEffect(() => {
-if(isPending2 && state2.success){
-    toast.success("Váše údaje byly úspěšně odeslány")
-}
-}, [state2.success, isPending2]); 
-useEffect(() => {
-if(state2.errors && state2.message){
-    console.log(state2.errors,state2.message)
-    toast.error(state2.message)
-}
-}, [state2.errors, state2.message]); 
+    if (!state2.success && state2.message) {
+        toast.error(state2.message);
+    }else if(state2.success){
+        toast.success("Úspěšně jste provedli objednávku");
+        
+    }
+    
+}, [state2.success, state2.message]);
     return(
         <section className="grid  sm:grid-cols-2 xl:grid-cols-3 gap-8">
             <div className="w-full flex flex-col space-y-2">
@@ -81,9 +79,9 @@ if(state2.errors && state2.message){
                 <Image src={allPictures[curImg]} alt={`${name} - ${overview}`} fill={true} className="rounded-lg object-cover"/>
                 </div>
                 
-                <div className=" flex flex-row  fex-wrap gap-2">
+                <div className=" flex flex-row  flex-wrap gap-2">
                     {allPictures.map((p: string, i: number) => (
-                        <div key={i} className="w-32 h-32 relative ">                        
+                        <div key={i} className="w-16 h-16 sm:w-32 sm:h-32 relative ">                        
                             <Image src={p} alt={name}  onClick={()  => setCurImg(i)}  fill={true} className={`rounded-lg object-cover ${i === curImg ? "border-secondary border-2" : null}`}/>  
                             </div>                
                     ))}
@@ -140,11 +138,11 @@ if(state2.errors && state2.message){
                 </form>
             </div>
             <div className="w-full space-y-4 sm:col-span-2 xl:col-span-1">
-                <div className="w-full grid grid-cols-3   gap-3">
+                <div className="w-full grid-cols-2 grid sm:grid-cols-3   gap-3">
                     {reviews && reviews.map((r: Review, i: number) => (
                         <div key={i} className="bg-primary-third rounded-lg flex flex-col text-right space-y-3 p-3">
                             
-                            <div className="flex flex-row self-end space-x-2"><span>{r.rating}/5</span> <StarIcon className="h-5 w-5 "/></div>
+                            <div className="flex flex-row self-end space-x-2"><span>{r.rating}/5</span> <StarIcon fill="#FFEE8C" color="#FFEE8C" className="h-5 w-5 "/></div>
                             <p>&apos;{r.review}&apos;</p>
                             <i className="">{r.name}</i>
                         </div>
@@ -152,7 +150,7 @@ if(state2.errors && state2.message){
                 </div>
             <div className='p-3 rounded-lg bg-secondary-foreground flex flex-col space-y-3'>
             <h1 className='text-2xl font-bold text-center'>Ohodnoťte produkt! </h1>
-        <form className="w-full  grid grid-cols-2  gap-6 " id='newsletter'>
+        <form className="w-full  grid grid-cols-1 sm:grid-cols-2  gap-6 " id='newsletter'>
             <div><label htmlFor="name">Vaše jméno</label>
             <Input className='w-full ' name="name" id="name" type="text" defaultValue={state2?.inputs?.name} placeholder="Zadejte celé jméno"  />
             {state2?.errors?.name && (
@@ -161,7 +159,7 @@ if(state2.errors && state2.message){
                                </p>
                             )}
             </div>
-            <div><label htmlFor="rating">Hodnoceni (1-5)</label>
+            <div><label htmlFor="rating" className="flex flex-row">Hodnoceni (1-5)<StarIcon fill="#FFEE8C" color="#FFEE8C" className="h-5 w-5 "/></label>
             <Input className='w-full ' name="rating" type="number" min={1} max={5}  defaultValue={state2?.inputs?.rating}/>
             {state2?.errors?.rating && (
                                  <p className="text-base font-semibold text-red-500">
@@ -180,8 +178,7 @@ if(state2.errors && state2.message){
             <input type="hidden" name="_id" value={_id}/>
             <div className='grid grid-cols-1 justify-items-center  w-full '>
             <Button type="submit" formAction={action2} className="self-end" >{isPending2 ? <Loader2 className='animate-spin' /> : <>Odeslat</>}</Button>
-            <p className='text-xs text-center'>Odesláním souhlasíte se zpracováním osobních údajů. Více informací 
-                <Link href='/souhlas' className="underline" target="_blank">zde</Link> </p>
+            <p className='text-xs text-center'>Odesláním souhlasíte se zpracováním osobních údajů. Více informací <Link href='/souhlas' className="underline decoration-wavy decoration-secondary" target="_blank">zde</Link> </p>
             </div>
         </form> 
         </div>

@@ -16,19 +16,15 @@ const actionState: ActionResponse<N> = {
 export default function Newsletter(){
     const [state, action, isPending] = useActionState(saveNewsletter, actionState);
     useEffect(() => {
-    if(isPending && state.success){
-        toast.success("Váše údaje byly úspěšně odeslány")
-    }
-}, [state.success, isPending]); 
-useEffect(() => {
-    if(state.errors && state.message){
-        console.log(state.errors,state.message)
-        toast.error(state.message)
-    }
-}, [state.errors, state.message]); 
+        if (!state.success && state.message) {
+            toast.error(state.message);
+        }else{
+          toast.success(state.message);
+        }
+    }, [state.success, state.message]); 
     return(
         <div className='p-3 rounded-lg bg-secondary-foreground flex flex-col space-y-3'>
-            <h2 className='text-xl font-medium text-center'>Nechcete si nechat ujít nově naskladněné produkty? Přihlaste se k newsletteru! </h2>
+            <h2 className='text-xl font-medium text-center'>Nechcete si nechat ujít nově naskladněné produkty? Přihlaste se k <span className='underline decoration-wavy decoration-secondary'>newsletteru!</span> </h2>
         <form className="w-full  flex flex-col sm:flex-row   gap-6 items-center" action={action} id='newsletter'>
             <div className='flex flex-col space-y-2'><Input className='w-full ' name="name" type="text" placeholder="Zadejte jméno" />
             {state?.errors?.name && (
@@ -55,7 +51,7 @@ useEffect(() => {
             <Button type="submit"  >{isPending ? <Loader2 className='animate-spin' /> : <>Odeslat</>}</Button> 
               </form>
              
-              <p className='text-sm text-center'>Přihlášením k odběru souhlasíte se zpracováním osobních údajů. Více informací <Link href='/souhlas' className="underline" target="_blank">zde</Link> </p>
+              <p className='text-sm text-center'>Přihlášením k odběru souhlasíte se zpracováním osobních údajů. Více informací <Link href='/souhlas' className="underline decoration-wavy decoration-secondary underline-offset-2" target="_blank">zde</Link> </p>
       
         </div>
     )

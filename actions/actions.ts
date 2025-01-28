@@ -112,7 +112,6 @@ export async function updateForgotPass(prevState: ActionResponse<SignIn>, formDa
     //await protectedRoute()
     const code = formData.get("code") as string
     const myData = {
-      email: formData.get("email") as string,
       password: formData.get("password") as string,
     }
     //const password= formData.get("password") as string
@@ -513,7 +512,8 @@ export async function validateCoupon(formData: FormData){
 
 export async function createOrder(prevSate: ActionResponse<Order> | null, formData: FormData): Promise<ActionResponse<Order>>{
     let products: OrderedItem[] = [];
-    let revalidate = false;
+    let revalidate,success = false;
+    
     try {
         const length = Number(formData.get("length"))
         for (let i = 0; i < length; i++) {
@@ -620,13 +620,17 @@ export async function createOrder(prevSate: ActionResponse<Order> | null, formDa
         console.log(result)   
     }
     const emailResponse = await created(String(email), order, products);
-    if(!emailResponse.ok) throw new Error("Nepodařilo se poslat mail - paid()");
+    if(!emailResponse.ok){ 
+      success = false
+      throw new Error("Nepodařilo se poslat mail - paid()");
+    } else{
     revalidate=true
+    success = true
     return {
         success: true,
         message: 'Objednávka byla vytvořena úspěšně!',
       }
-      
+    }
     }catch (error) {
             console.error("Unexpected error:", error);
             return {
@@ -634,9 +638,11 @@ export async function createOrder(prevSate: ActionResponse<Order> | null, formDa
                 message: 'Nevyplnili jste požadované údaje.',
               }
     }finally{
-      if(revalidate){
+      if(revalidate && success){
         revalidatePath("/checkout")
-        redirect("/")
+        redirect("/platba/provedena")
+      }else{
+        redirect("/platba/error")
       }
     }
 }

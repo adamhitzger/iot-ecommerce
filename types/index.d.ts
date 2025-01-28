@@ -114,7 +114,7 @@ type Vars = Var[];
 export interface Product {
     _id: string;
     _type: string;
-    
+    price: number;
     name: string;
     overview: string;
     keywords: string;

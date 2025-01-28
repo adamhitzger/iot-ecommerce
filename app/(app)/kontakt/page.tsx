@@ -20,17 +20,16 @@ const actionState: ActionResponse<Contact> = {
 
 export default function Kontakt() {
     const [state, action, isPending] = useActionState(saveContact, actionState)
-useEffect(() => {
-    if(isPending && state.success){
-        toast.success("Vaše zpráva byla odeslána, co nejdříve se Vám ozvu:");
-    }
-}, [state.success, isPending]); 
+
     useEffect(() => {
-    if(state.errors){
-        console.log(state.errors, state.message)
-        toast.error(state.message)
-    }
-}, [state.errors, state.message]); 
+        if (!state.success && state.message ) {
+            toast.error(state.message);
+        }else if(state.success){
+            toast.success("Vaše zpráva byla odeslána, co nejdříve se Vám ozvu:");
+          
+        }
+        
+    }, [state.success,, state.message]);
     return(
         <>
         <div className='grid grid-cols1 lg:grid-cols-2 gap-6 w-full'>

@@ -19,7 +19,7 @@ function ForgotForm(){
 const [state, action, isPending] = useActionState(updateForgotPass, actionState);
     
     useEffect(() => {
-        if (!state.success) {
+        if (!state.success && state.message) {
             toast.error(state.message);
         }else{
           toast.success(state.message);
@@ -32,15 +32,6 @@ const [state, action, isPending] = useActionState(updateForgotPass, actionState)
             <h1>Aktualizace hesla</h1>
             <span>Povinné údaje: *</span>
             </div>
-                        <div>
-                            <label htmlFor="email">Email*</label>
-                            <Input id="email" name="email" type="text" defaultValue={state?.inputs?.email} placeholder="Zadejte email"/>
-                            {state?.errors?.email && (
-                                 <p className="text-base font-semibold text-red-500">
-                                 {state.errors.email}
-                               </p>
-                            )}
-                        </div>
                         <div>
                             <label htmlFor="password" >Heslo*</label>
                             <Input id="password"  name="password"  type="password" placeholder="Zadejte heslo"/>   

@@ -3,7 +3,7 @@
 export default function DopravaPlatba() {
     return(
         <>
-            <h1 className="text-6xl font-bold text -center">Doprava a platba zboží</h1>
+            <h1 className=" font-bold text -center">Doprava a platba zboží</h1>
             <ol className="list-decimal px-8 text-base">
                 <li><span>Způsoby dopravy</span>
                     <ul>

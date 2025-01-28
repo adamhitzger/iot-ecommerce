@@ -19,7 +19,7 @@ export default function Details({user}: {user: User}){
     const [state, action, isPending] = useActionState(updateUser, actionState);
     
     useEffect(() => {
-        if (!state.success) {
+        if (!state.success && state.message) {
             toast.error(state.message);
         }else{
           toast.success(state.message);

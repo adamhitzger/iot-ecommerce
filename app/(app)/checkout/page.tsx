@@ -10,7 +10,6 @@ import { createOrder, validateCoupon } from "@/actions/actions"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Loader2, X } from "lucide-react"
 import { ActionResponse, Order } from "@/types"
-import { redirect } from "next/navigation"
 
 declare global {
     interface Window {
@@ -28,7 +27,6 @@ export default function CheckouPage(){
     const date = new Date()
     const now = `${date.getFullYear()}/0${date.getMonth()+1}/0${date.getDate()}`
     const {items, removeItem, updateQuantity, total, clearCart } = useCart()
-    
     const [packetaPoint, setPacketaPoint] = useState<{id: number, street: string}>({id: 0, street: ""});
     const [coupon, setCoupon] = useState({
         code: "",free_del: false, value: 0, sale: false
@@ -36,12 +34,11 @@ export default function CheckouPage(){
     const [state, action, ispending] = useActionState(createOrder, actionState)
   
       useEffect(() => {
-        if (!state.success) {
+        if (!state.success && state.message) {
             toast.error(state.message);
         }else if(state.success){
             toast.success("Úspěšně jste provedli objednávku");
             clearCart();
-            redirect("/");
         }
         
     }, [state.success, clearCart, state.message]); 
@@ -267,11 +264,10 @@ export default function CheckouPage(){
                         </RadioGroup>
                         </div>
                         <div className="mt-8">
-                <Button size="lg" type="submit" formAction={action} className="w-full text-base" disabled={total === 0}>{ispending ? <Loader2 className='animate-spin' /> : "Odeslat objednávku"}</Button>
-            </div>
+                  </div>
                         </div>
                     </div>
-                    <div className='bg-gray-300 rounded-xl bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-30 p-5'>
+                    <div className='bg-gray-300 flex flex-col space-y-2 rounded-xl bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-30 p-5'>
                         <p>Account Number: 123-7895890287/0100</p>
                         <p>Bank: Example Bank</p>
                         <p>IBAN: CZ1234567890123456789012</p>
@@ -283,6 +279,8 @@ export default function CheckouPage(){
                             width={200}
                             height={200}
                         />
+                        <Button size="lg" type="submit" formAction={action} className="w-full text-base" disabled={total === 0}>{ispending ? <Loader2 className='animate-spin' /> : "Odeslat objednávku"}</Button>
+          
                     </div>
                     
                 </div>

@@ -3,7 +3,7 @@
 export default function Souhlas() {
     return(
         <>
-            <h1 className="text-6xl font-bold text-center">Souhlas se zpracováním osobních údajů pro marketingové účely</h1>
+            <h1 className="l font-bold text-center">Souhlas se zpracováním osobních údajů pro marketingové účely</h1>
             <ul className="text-lg list-disc px-4">Obchodní společnosti HydrooCann Natural, s.r.o. se sídlem Korunní 2569/108, Praha 10 identifikační číslo: 09706381, (dále jen „správce“), ve smyslu nařízení Evropského parlamentu a Rady EU 2016/679 zpracovávala tyto osobní údaje:
                 <li>Jméno a příjmení,</li>
                 <li>e-mail (dále jen „osobní údaje“)</li>

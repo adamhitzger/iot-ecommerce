@@ -3,7 +3,7 @@
 export default function Podminky() {
     return(
         <>
-            <h1 className="text-6xl font-bold text-center">Obchodní podmínky</h1>
+            <h1 className=" font-bold text-center">Obchodní podmínky</h1>
             <p className="text-lg">Obchodní společnosti HydrooCann Natural, s.r.o. se sídlem Korunní 2569/108, Praha 10 identifikační číslo: 09706381, zapsané v obchodním rejstříku vedeném u Městského soudu v Praze, oddíl C 339534, vložka MPSH pro prodej zboží prostřednictvím on-line obchodu umístěného na internetové adrese www.hydroocann.com</p>
             <ol className="list-decimal px-8 text-base">
                 <li><span>Úvodní ustanovení</span>
