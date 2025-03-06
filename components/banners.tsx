@@ -13,11 +13,10 @@ import { useRef } from "react";
 import Link from "next/link"; 
 import Image from "next/image";
 import { Button } from "./ui/button";
-import { useInView, motion } from "motion/react";
+import { motion } from "motion/react";
 
 export function Slider({slides}: {slides: Banners}) {
-    const ref = useRef(null)
-    const inView = useInView(ref)
+
     const plugin = useRef(
         Autoplay({ delay: 4000, stopOnInteraction: true })
     );
