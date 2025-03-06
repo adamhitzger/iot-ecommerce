@@ -13,6 +13,8 @@ import { Badge } from "@/components/ui/badge"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { ChevronDown, ChevronUp } from "lucide-react"
 import { useState } from "react";
+import {motion} from "motion/react"
+
 export function UserOrderCard({ order }: { order: Order }) {
     const [isOpen, setIsOpen] = useState(false)
   
@@ -97,7 +99,12 @@ export default function UserForm({user, changePass, changeNames, orders}: {user:
     return(
         <>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <form className="rounded-xl bg-primary-third p-6 grid grid-cols-2 h-fit  w-full  gap-5 justify-items-center content-end" autoComplete="on">
+    <motion.form 
+    initial={{opacity: 0, y: -500}}
+    animate={{opacity: 1, y: 0}}
+    exit={{opacity: 0, y: -500}}
+    transition={{duration: 0.5}}
+    className="rounded-xl bg-primary-third p-6 grid grid-cols-2 h-fit  w-full  gap-5 justify-items-center content-end" autoComplete="on">
             <div className="w-full  flex flex-col space-y-4 col-span-2">
             <h1>Údaje</h1>
             </div>
@@ -132,9 +139,14 @@ export default function UserForm({user, changePass, changeNames, orders}: {user:
                         </div>
                         </div>
                         
-        </form>
+        </motion.form>
 
-        <div className="flex space-y-4 flex-col rounded-xl bg-primary-third p-6">
+        <motion.div 
+        initial={{opacity: 0, y: 500}}
+        animate={{opacity: 1, y: 0}}
+        exit={{opacity: 0, y: 500}}
+        transition={{duration: 0.5}}
+        className="flex space-y-4 flex-col rounded-xl bg-primary-third p-6">
         <h1>Objednávky</h1>
       {orders.length > 0 ? (
         <div className="">
@@ -145,7 +157,7 @@ export default function UserForm({user, changePass, changeNames, orders}: {user:
       ) : (
         <p className="text-lg text-gray-600">Nemáte žadné objednávky...</p>
       )}
-        </div>
+        </motion.div>
         </div>
         {changePass && <Password/>}
         {changeNames && <Details user={user}/>}

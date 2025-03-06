@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import {motion} from "motion/react"
 const actionState: ActionResponse<User> = {
     success: false,
     message: "",
@@ -23,7 +24,12 @@ export default function SignUpPage(){
         }
     }, [state.success, state.message]); 
     return(
-        <form className="rounded-xl bg-primary-third p-6 grid grid-cols-2 m-auto w-full md:w-1/2 gap-5 justify-items-center content-end" autoComplete="on">
+        <motion.form
+        initial={{opacity: 0, y: -500}}
+    animate={{opacity: 1, y: 0}}
+    exit={{opacity: 0, y: -500}}
+    transition={{duration: 0.5}}
+        className="rounded-xl bg-primary-third p-6 grid grid-cols-2 m-auto w-full md:w-1/2 gap-5 justify-items-center content-end" autoComplete="on">
             <div className="w-full flex flex-col space-y-4  col-span-2">
             <h1>Registrace</h1>
             <span>Povinné údaje: *</span>
@@ -84,6 +90,6 @@ export default function SignUpPage(){
                             <p>Přihlášením k odběru souhlasíte se zpracováním osobních údajů. Více informací <Link className="underline decoration-wavy decoration-secondary" href="/souhlas">zde</Link>.</p>
                             <p>Máte vytvořený účet? Přihlaste se <Link className="underline decoration-wavy decoration-secondary" href="/signin"> zde</Link></p>
                         </div>
-        </form>
+        </motion.form>
     )
 }

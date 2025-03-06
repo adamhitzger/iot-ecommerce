@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import { saveContact } from '@/actions/actions';
 import { ActionResponse, Contact } from '@/types';
 import Newsletter from '@/components/newsletter';
-
+import {motion} from "motion/react"
 const actionState: ActionResponse<Contact> = {
     success: false,
     message: ""
@@ -22,18 +22,23 @@ export default function Kontakt() {
     const [state, action, isPending] = useActionState(saveContact, actionState)
 
     useEffect(() => {
-        if (!state.success && state.message ) {
+        if (!state.success && state.message.length > 1 ) {
             toast.error(state.message);
-        }else if(state.success){
-            toast.success("Vaše zpráva byla odeslána, co nejdříve se Vám ozvu:");
-          
+        }else if(state.success && state.message.length > 1){
+            toast.success("Vaše zpráva byla odeslána, co nejdříve se Vám ozvu:"); 
         }
         
     }, [state.success,, state.message]);
     return(
         <>
-        <div className='grid grid-cols1 lg:grid-cols-2 gap-6 w-full'>
-            <div className='w-full rounded-lg shadow-lg shadow-secondary-foreground h-96 lg:h-auto bg-primary-third p-1'>
+        <div 
+        className='grid grid-cols1 lg:grid-cols-2 gap-6 w-full'>
+            <motion.div 
+            initial={{opacity: 0, y: -500}}
+            animate={{opacity: 1, y: 0}}
+            exit={{opacity: 0, y: -500}}
+            transition={{duration: 0.5}}
+            className='w-full rounded-lg shadow-lg shadow-secondary-foreground h-96 lg:h-auto bg-primary-third p-1'>
             <Map
                     mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN!}
                     initialViewState={{
@@ -46,8 +51,13 @@ export default function Kontakt() {
                 >
                     <Marker longitude={15.5803} latitude={49.6053} anchor='bottom' color="red" />
                 </Map>
-            </div>
-            <div>
+            </motion.div>
+            <motion.div
+            initial={{opacity: 0, y: 500}}
+            animate={{opacity: 1, y: 0}}
+            exit={{opacity: 0, y: 500}}
+            transition={{duration: 0.5}}
+            >
             <form className="bg-primary-third p-4  grid grid-cols-1 sm:grid-cols-2 rounded-lg px-5  w-full gap-3 " autoComplete="on" action={action}>
                 <div className='flex flex-col w-full space-y-2'>
                     <label>Celé jméno*</label>
@@ -113,7 +123,7 @@ export default function Kontakt() {
                         <Button type="submit" variant={"default"} size={'lg'} className='mx-auto' >{isPending ? <Loader2 className='animate-spin' /> : <>Odeslat </>}</Button>
                         </div>
                 </form>
-            </div>
+            </motion.div>
         </div>
         <Newsletter/>
         </>

@@ -4,14 +4,22 @@ import { Products, Product as P, Categories, Category as C } from "@/types"
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter,useSearchParams } from "next/navigation";
-import { Suspense, useState } from "react";
+import { Suspense, useState, useRef } from "react";
 import { formUrlQuery } from '@/lib/utils';
 import { CardContainer, CardItem } from "./ui/3d-card";
-
+import { useInView, motion } from "motion/react";
 
 export default function ProductsGrid({products}:{products: Products}){
- return (
-    <section className="w-full flex flex-col items-center space-y-4 text-center">
+    const ref = useRef(null)
+    const inView = useInView(ref)
+   return (
+    <motion.section 
+    initial={{opacity: 0, x: -500}}
+        animate={inView?{opacity: 1, x: 0}: {}}
+        exit={{opacity: 0, x: -500}}
+        transition={{duration: 0.5}}
+        ref={ref}
+    className="w-full flex flex-col items-center space-y-4 text-center">
     <h1 className=" font-bold">Nové produkty</h1>
     <p className="text-xl lg:text-2xl md:w-3/4  font-light">Naskladněné produkty připravené k pro Vás. Uplatněte slevový kupón a objednejte domů. Naskladněné produkty připravené k pro Vás. Uplatněte slevový kupón a objednejte domů.</p>
     <div className="w-full gap-4 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 justify-items-center">
@@ -19,13 +27,21 @@ export default function ProductsGrid({products}:{products: Products}){
            <Product p={p} key={i}/>
         )) : <p className="text-center text-xl font-bold text-primary-foreground">Nebyly nalezeny žádné produkty</p>}
     </div>
-    </section>
+    </motion.section>
  )
 }
 
 export function CategoriesGrid({categories}:{categories: Categories}){
+    const ref = useRef(null)
+    const inView = useInView(ref)
     return(
-        <section className="w-full flex flex-col space-y-4 text-center">
+        <motion.section 
+        initial={{opacity: 0, x: 500}}
+        animate={inView?{opacity: 1, x: 0}: {}}
+        exit={{opacity: 0, x: 500}}
+        transition={{duration: 0.5}}
+        ref={ref}
+        className="w-full flex flex-col space-y-4 text-center">
         <h1 className=" font-bold text-center">Kategorie</h1>
     <div className="w-full justify-items-center grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
         {categories.map((c: C, i: number) => (
@@ -36,7 +52,7 @@ export function CategoriesGrid({categories}:{categories: Categories}){
             </Suspense>
         ))}
     </div>
-    </section>
+    </motion.section>
     )
 }
 

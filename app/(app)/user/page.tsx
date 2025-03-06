@@ -26,8 +26,7 @@ export default async function UserPage(props: { searchParams: Promise<{ [key: st
     console.log(user)
     return(   
         <>
-        <UserForm user={user} changePass={changePass} changeNames={changeNames} orders={orders}/>
-            
+        <UserForm user={user} changePass={changePass} changeNames={changeNames} orders={orders}/>   
        </>
     )
 }

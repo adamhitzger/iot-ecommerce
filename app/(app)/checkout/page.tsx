@@ -10,7 +10,7 @@ import { createOrder, validateCoupon } from "@/actions/actions"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Loader2, X } from "lucide-react"
 import { ActionResponse, Order } from "@/types"
-
+import {motion} from "motion/react"
 declare global {
     interface Window {
         // eslint-disable-next-line
@@ -97,7 +97,12 @@ export default function CheckouPage(){
       const celkem = Math.ceil((del + total -(total/100*coupon.value)))
      return(
         <form className="grid grid-cols-1 md:grid-cols-2 gap-8" autoComplete="on">
-            <div className="w-full flex flex-col">
+            <motion.div 
+            initial={{opacity: 0, y: -500}}
+            animate={{opacity: 1, y: 0}}
+            exit={{opacity: 0, y: -500}}
+            transition={{duration: 0.5}}
+            className="w-full flex flex-col">
             <h2 className="text-2xl font-semibold mb-4">Souhrn objednávky</h2>
                     {items.map((item, idx: number) => (
                         <div key={idx} className="flex items-center justify-between mb-4 p-4 border rounded-xl">
@@ -135,8 +140,13 @@ export default function CheckouPage(){
                       <div className="text-xl font-semibold mt-4">Doprava: {del} Kč</div>
                     <div className="text-xl font-semibold mt-4">Celkem: {coupon.sale ? <span className="text-red-600 line-through font-bold">{total} Kč</span> : null}  {celkem } Kč</div>
                 
-            </div>
-            <div className="w-full flex flex-col">
+            </motion.div>
+            <motion.div 
+            initial={{opacity: 0, y: 500}}
+            animate={{opacity: 1, y: 0}}
+            exit={{opacity: 0, y: 500}}
+            transition={{duration: 0.5}}
+            className="w-full flex flex-col">
             <div className="flex flex-row space-x-2">
            
                        </div>
@@ -284,7 +294,7 @@ export default function CheckouPage(){
                     </div>
                     
                 </div>
-            </div>
+            </motion.div>
             
         </form>
     )
