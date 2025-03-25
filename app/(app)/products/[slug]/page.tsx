@@ -20,7 +20,6 @@ export async function generateMetadata(props:{params: Promise<{ slug: string}>})
           authors: [{name: "Adam Hitzger"}, {name: "Ivan Čmiko"}],
           keywords: [
              p.overview, 
-            ...p.keywords
         ],
         creator: "Adam Hitzger",
                 publisher: "Adam Hitzger",

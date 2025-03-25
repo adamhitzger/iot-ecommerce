@@ -117,7 +117,7 @@ export interface Product {
     price: number;
     name: string;
     overview: string;
-    keywords: string;
+    keywords: string[];
     sale: number;
     slug: string;
     terpens: Terpens;
@@ -130,8 +130,7 @@ export interface Product {
     category: Category;
     product: Products;
     file: string;
-    tutorial: string[];
-   
+    tutorial: string[]; 
 }
 
 export interface basketItem{

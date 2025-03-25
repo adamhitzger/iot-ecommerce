@@ -33,12 +33,13 @@ export default function ProductComponent({product, reviews}: {product: Product, 
         details,
         pictures,
         terpens,
-        variants
+        variants,
+        price
     } = product;
     const allPictures = [picture, ...pictures]
     
     const [curImg, setCurImg] = useState<number>(0);
-    const [price, setPrice] = useState<number>(variants[0]?.price_b2c || 0);
+    const [prise, setPrice] = useState<number>(price);
     
     const handleVariantsChange = (variant: string) => {
         const selectedVariant = variants.find((v) => v.slug === variant);
@@ -91,7 +92,7 @@ export default function ProductComponent({product, reviews}: {product: Product, 
                 <h1 className="text-6xl font-bold">{name}</h1>
                 <Link href={`/products/?name=${category.slug}`} className="underline underline-offset-2 text-2xl">{category.name}</Link>
                 <div className="flex flex-row text-3xl font-medium space-x-3">
-                    <span className={`${sale ? "text-red-600 line-through font-bold" : null}`}>{price} Kč</span> {sale ? <span>{(1-(sale/100)) * price } Kč</span> : null}
+                    <span className={`${sale ? "text-red-600 line-through font-bold" : null}`}>{prise} Kč</span> {sale ? <span>{(1-(sale/100)) * prise } Kč</span> : null}
                 </div>
                 <PortableText components={components} value={details}/>
                 
@@ -101,7 +102,7 @@ export default function ProductComponent({product, reviews}: {product: Product, 
                         <label htmlFor="terpens">Příchutě:</label>
                         <RadioGroup required name="terpen" id="terpens"  className="flex flex-row space-x-4 flex-wrap">
                 
-                            {terpens.map((t, i) => (
+                            {terpens && terpens.map((t, i) => (
                                 <div key={i} className="flex flex-row space-x-2">
                                     <div className="w-4 h-4 rounded-full" style={{background: `rgba(${t.color.rgb.r},${t.color.rgb.g},${t.color.rgb.b},${t.color.rgb.a})`}}></div>
                                 <label htmlFor={t.slug}>{t.t_name}</label>
@@ -119,7 +120,7 @@ export default function ProductComponent({product, reviews}: {product: Product, 
                         onValueChange={handleVariantsChange}
                         required
                         >
-                            {variants.map((v, i) => (
+                            {variants && variants.map((v, i) => (
                                 <div key={i} className="flex flex-row space-x-2">
                                 <label htmlFor={v.slug}>{v.v_name}</label>
                                 <RadioGroupItem value={v.slug} className="border-white" />
@@ -132,7 +133,7 @@ export default function ProductComponent({product, reviews}: {product: Product, 
                         <Input name="quantity" type="number" min={"1"}  defaultValue={1} className="w-12" required/>
                         <input type="hidden" name="_id" value={_id} required readOnly/>
                         <input type="hidden" name="name" value={name} required readOnly/>
-                        <input type="hidden" name="price" value={sale ? (1-(sale/100)) * price : price} required readOnly/>
+                        <input type="hidden" name="price" value={sale ? (1-(sale/100)) * prise : prise} required readOnly/>
                         <Button type="submit" size={"sm"} formAction={addToBasket}>Přidat do košíku</Button>
                     </div>
                 </form>
