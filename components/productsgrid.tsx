@@ -62,11 +62,11 @@ export function Product({p}: {p: P}) {
         <Link href={`/products/${p.slug}`}  >
         <CardContainer  className="w-full max-w-56 flex flex-col items-center rounded-xl p-3 bg-secondary-foreground">
           
-            <CardItem className="place-self-center"
+            <CardItem className="place-self-center max-w-[150px] max-h-[150px]"
             translateZ={50}
             >
                 
-                <Image src={p.picture} alt={p.name} width={150} height={150}/>
+                <Image src={p.picture} alt={p.name} width={150} height={150} className="max-w-[150px] max-h-[150px] w-full h-full object-contain"/>
             </CardItem>
             
             <CardItem translateZ={60} className="text-left w-full flex flex-col">

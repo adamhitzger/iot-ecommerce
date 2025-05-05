@@ -36,16 +36,17 @@ export default function ProductComponent({product, reviews}: {product: Product, 
         variants,
         price
     } = product;
-    const allPictures = [picture, ...pictures]
+    const allPictures: string[] = [picture, ...(pictures || [])]
     
     const [curImg, setCurImg] = useState<number>(0);
     const [prise, setPrice] = useState<number>(price);
-    
+    const [variant, setVariant] = useState<boolean>(false);
     const handleVariantsChange = (variant: string) => {
         const selectedVariant = variants.find((v) => v.slug === variant);
         if (selectedVariant) {
             if(user){setPrice(selectedVariant.price_b2c)} else { setPrice(selectedVariant.price_b2b)} 
             console.log(selectedVariant.v_name)
+        setVariant(true)
     }
       }   
     async function addToBasket(formData: FormData){
@@ -77,13 +78,13 @@ export default function ProductComponent({product, reviews}: {product: Product, 
         <section className="grid  sm:grid-cols-2 xl:grid-cols-3 gap-8">
             <div className="w-full flex flex-col space-y-2">
             <div className="w-full relative aspect-square ">
-                <Image src={allPictures[curImg]} alt={`${name} - ${overview}`} fill={true} className="rounded-lg object-cover"/>
+                <Image src={allPictures[curImg]} alt={`${name} - ${overview}`} fill={true} className="rounded-lg object-contain"/>
                 </div>
                 
                 <div className=" flex flex-row  flex-wrap gap-2">
                     {allPictures.map((p: string, i: number) => (
                         <div key={i} className="w-16 h-16 sm:w-32 sm:h-32 relative ">                        
-                            <Image src={p} alt={name}  onClick={()  => setCurImg(i)}  fill={true} className={`rounded-lg object-cover ${i === curImg ? "border-secondary border-2" : null}`}/>  
+                            <Image src={p} alt={name}  onClick={()  => setCurImg(i)}  fill={true} className={`rounded-lg object-contain ${i === curImg ? "border-secondary border-2" : null}`}/>  
                             </div>                
                     ))}
                 </div>
@@ -92,7 +93,13 @@ export default function ProductComponent({product, reviews}: {product: Product, 
                 <h1 className="text-6xl font-bold">{name}</h1>
                 <Link href={`/products/?name=${category.slug}`} className="underline underline-offset-2 text-2xl">{category.name}</Link>
                 <div className="flex flex-row text-3xl font-medium space-x-3">
-                    <span className={`${sale ? "text-red-600 line-through font-bold" : null}`}>{prise} Kč</span> {sale ? <span>{(1-(sale/100)) * prise } Kč</span> : null}
+                    {variant ? (
+                        <><span className={`${sale ? "text-red-600 line-through font-bold" : null}`}>{prise} Kč</span> {sale ? <span>{(1-(sale/100)) * prise } Kč</span> : null}</>
+                    ):
+                    (
+                        <span className={"text-red-600 font-medium"}>Vyberte variantu</span>
+                    )}
+                    
                 </div>
                 <PortableText components={components} value={details}/>
                 
@@ -102,7 +109,7 @@ export default function ProductComponent({product, reviews}: {product: Product, 
                         <label htmlFor="terpens">Příchutě:</label>
                         <RadioGroup required name="terpen" id="terpens"  className="flex flex-row space-x-4 flex-wrap">
                 
-                            {terpens && terpens.map((t, i) => (
+                            {terpens.map((t, i) => (
                                 <div key={i} className="flex flex-row space-x-2">
                                     <div className="w-4 h-4 rounded-full" style={{background: `rgba(${t.color.rgb.r},${t.color.rgb.g},${t.color.rgb.b},${t.color.rgb.a})`}}></div>
                                 <label htmlFor={t.slug}>{t.t_name}</label>
@@ -120,7 +127,7 @@ export default function ProductComponent({product, reviews}: {product: Product, 
                         onValueChange={handleVariantsChange}
                         required
                         >
-                            {variants && variants.map((v, i) => (
+                            {variants.map((v, i) => (
                                 <div key={i} className="flex flex-row space-x-2">
                                 <label htmlFor={v.slug}>{v.v_name}</label>
                                 <RadioGroupItem value={v.slug} className="border-white" />
