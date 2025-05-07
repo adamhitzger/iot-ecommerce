@@ -7,7 +7,7 @@ import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { saveNewsletter } from '@/actions/actions';
 import { Newsletter as N, ActionResponse } from '@/types';
-import { useInView, motion } from 'motion/react';
+import { motion } from 'motion/react';
 const actionState: ActionResponse<N> = {
     success: false,
     message: ""
