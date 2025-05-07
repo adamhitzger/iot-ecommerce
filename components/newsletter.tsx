@@ -15,7 +15,6 @@ const actionState: ActionResponse<N> = {
 
 export default function Newsletter(){
     const ref = useRef(null)
-    const inView = useInView(ref)
     const [state, action, isPending] = useActionState(saveNewsletter, actionState);
     useEffect(() => {
         if (!state.success && state.message) {
@@ -27,7 +26,7 @@ export default function Newsletter(){
     return(
         <motion.div 
         initial={{opacity: 0, x: -500}}
-        animate={inView?{opacity: 1, x: 0}: {}}
+        animate={{opacity: 1, x: 0}}
         exit={{opacity: 0, x: -500}}
         transition={{duration: 0.5}}
         ref={ref}

@@ -63,7 +63,7 @@ export default function RootLayout({
         <CookiesBanner/>
          
             <Navbar/>
-            <main className="flex flex-col min-h-screen justify-center space-y-6 py-6 px-6 lg:px-16"> 
+            <main className="flex flex-col min-h-screen justify-center space-y-6 overflow-x-hidden py-6 px-6 lg:px-16"> 
             {children}
             <Footer/>
             </main>

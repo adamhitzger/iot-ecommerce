@@ -7,15 +7,14 @@ import { useRouter,useSearchParams } from "next/navigation";
 import { Suspense, useState, useRef } from "react";
 import { formUrlQuery } from '@/lib/utils';
 import { CardContainer, CardItem } from "./ui/3d-card";
-import { useInView, motion } from "motion/react";
+import { motion } from "motion/react";
 
 export default function ProductsGrid({products}:{products: Products}){
     const ref = useRef(null)
-    const inView = useInView(ref)
    return (
     <motion.section 
     initial={{opacity: 0, x: -500}}
-        animate={inView?{opacity: 1, x: 0}: {}}
+        animate={{opacity: 1, x: 0}}
         exit={{opacity: 0, x: -500}}
         transition={{duration: 0.5}}
         ref={ref}
@@ -33,11 +32,11 @@ export default function ProductsGrid({products}:{products: Products}){
 
 export function CategoriesGrid({categories}:{categories: Categories}){
     const ref = useRef(null)
-    const inView = useInView(ref)
+   
     return(
         <motion.section 
         initial={{opacity: 0, x: 500}}
-        animate={inView?{opacity: 1, x: 0}: {}}
+        animate={{opacity: 1, x: 0}}
         exit={{opacity: 0, x: 500}}
         transition={{duration: 0.5}}
         ref={ref}
