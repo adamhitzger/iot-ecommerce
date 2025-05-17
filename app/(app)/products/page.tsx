@@ -1,7 +1,7 @@
 import { Categories, Products as P } from "@/types"
 import { sanityFetch } from "@/sanity/lib/client"
 import { ALL_CATEGORIES, ALL_PRODUCTS, PRODUCTS_BY_CAT } from "@/sanity/lib/queries";
-import ProductsGrid, { CategoriesGrid } from "@/components/productsgrid";
+import ProductsGrid, { CategoriesGridOverflow } from "@/components/productsgrid";
 //import { Pagination } from "@/components/ui/pagination";
 import PaginationComp from "@/components/paginationComp";
 
@@ -25,7 +25,7 @@ export default async function Products({ searchParams }: { searchParams: Promise
     const totalPages = Number(products.length) / PAGE_SIZE;
     return(
         <div>
-            <CategoriesGrid categories={categories}/>
+            <CategoriesGridOverflow categories={categories}/>
             <ProductsGrid products={products}/>
             <PaginationComp currentPage={currentPage} totalPages={totalPages}/>
         </div>

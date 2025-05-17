@@ -42,7 +42,32 @@ export function CategoriesGrid({categories}:{categories: Categories}){
         ref={ref}
         className="w-full flex flex-col space-y-4 text-center">
         <h1 className=" font-bold text-center">Kategorie</h1>
-    <div className="w-full justify-items-center grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+    <div className="w-full  justify-items-center grid-cols-2 grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        {categories.map((c: C, i: number) => (
+            <Suspense key={i}>
+                <Link href={`/products/?name=${c.slug}`}>
+            <Category c={c} />
+            </Link>
+            </Suspense>
+        ))}
+    </div>
+    </motion.section>
+    )
+}
+
+export function CategoriesGridOverflow({categories}:{categories: Categories}){
+    const ref = useRef(null)
+   
+    return(
+        <motion.section 
+        initial={{opacity: 0, x: 500}}
+        animate={{opacity: 1, x: 0}}
+        exit={{opacity: 0, x: 500}}
+        transition={{duration: 0.5}}
+        ref={ref}
+        className="w-full flex flex-col space-y-4 text-center">
+        <h1 className=" font-bold text-center">Kategorie</h1>
+    <div className="w-full  justify-items-center flex flex-row overflow-x-scroll space-x-4">
         {categories.map((c: C, i: number) => (
             <Suspense key={i}>
                 <Link href={`/products/?name=${c.slug}`}>
@@ -58,9 +83,9 @@ export function CategoriesGrid({categories}:{categories: Categories}){
 export function Product({p}: {p: P}) {
 
     return(
-        <Link href={`/products/${p.slug}`}  >
+        
         <CardContainer  className="w-full max-w-56 flex flex-col items-center rounded-xl p-3 bg-secondary-foreground">
-          
+          <Link href={`/products/${p.slug}`} >
             <CardItem className="place-self-center max-w-[150px] max-h-[150px]"
             translateZ={50}
             >
@@ -74,8 +99,9 @@ export function Product({p}: {p: P}) {
                     <span className={`${p.sale ? "text-red-600 line-through font-bold" : null}`}>{p.price} Kč</span> {p.sale ? <span>{(1-(p.sale/100)) * p.price } Kč</span> : null}
             </div>
             </CardItem>
+            </Link>
         </CardContainer>
-        </Link>
+        
     )
 }
 
@@ -108,7 +134,7 @@ export function Category({c}: {c: C}) {
     }
     return(
         
-            <CardContainer    onClickCapture={() => handleTypeClick(String(c.slug))}  className="text-center flex flex-col items-center rounded-full p-5 w-40 bg-secondary-foreground">
+            <CardContainer    onClickCapture={() => handleTypeClick(String(c.slug))}  className="text-center  flex flex-col items-center rounded-full p-5 w-40 bg-secondary-foreground">
                 <CardItem translateZ={30} >
                 <Image src={c.picture} alt={c.name} width={100} height={100}/>
                 <h2 className=" text-xl font-bold underline underline-offset-4 decoration-wavy decoration-secondary">{c.name}</h2>
