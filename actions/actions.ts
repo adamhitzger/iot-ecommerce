@@ -562,6 +562,7 @@ export async function createOrder(prevSate: ActionResponse<Order> | null, formDa
     }
     console.log(order)
     const validatedData = orderedSchema.safeParse(order)
+    console.log('Please fix the errors in the form')
     if (!validatedData.success) {
         return {
           success: false,
@@ -577,7 +578,7 @@ export async function createOrder(prevSate: ActionResponse<Order> | null, formDa
       if(validatedData.data.cod === "true"){
         //xreate Packeta label
             const packetaCode = await createPacket({name, surname, email, phone,packetaId, total})
-            if(!packetaCode) throw new Error("Nepodařilo se vytvořit štítek");
+            if(!packetaCode) console.log("Nepodařilo se vytvořit štítek");
                 else {
              const result = await c.create({
                 barcode: packetaCode,
@@ -599,7 +600,7 @@ export async function createOrder(prevSate: ActionResponse<Order> | null, formDa
                packetaId: packetaId,
                couponValue: couponValue
         })
-        console.log(result)   
+        
     }
     }else{
         const result = await c.create({
@@ -621,12 +622,11 @@ export async function createOrder(prevSate: ActionResponse<Order> | null, formDa
                packetaId: packetaId,
                couponValue: couponValue
         })
-        console.log(result)   
     }
     const emailResponse = await created(String(email), order, products);
     if(!emailResponse.ok){ 
       success = false
-      throw new Error("Nepodařilo se poslat mail - paid()");
+      console.log("Nepodařilo se poslat mail - paid()");
     } else{
     revalidate=true
     success = true
