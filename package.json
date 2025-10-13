@@ -21,6 +21,7 @@
     "@sanity/icons": "^3.5.0",
     "@sanity/image-url": "^1.1.0",
     "@sanity/vision": "^3.65.1",
+    "@sparticuz/chromium": "^141.0.0",
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.47.12",
     "@types/nodemailer": "^6.4.17",

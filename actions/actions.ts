@@ -13,6 +13,7 @@ import puppeteer from 'puppeteer';
 import { createSupabaseClient, protectedRoute, getUser } from "@/auth/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import chromium from "@sparticuz/chromium"
 const axios = require("axios")
 //passed test
 export async function signOut() {
@@ -937,7 +938,11 @@ export async function completed(email: string, data: SanityDocument){
 }
 
 async function generatePDF(data: SanityDocument) {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: chromium.args,
+    executablePath: await chromium.executablePath(),
+  });
     const page = await browser.newPage();
     const html = `
     <!DOCTYPE html>
@@ -1067,7 +1072,9 @@ async function generatePDF(data: SanityDocument) {
     </html>
   `;
 
-    await page.setContent(html)
+    await page.setContent(html, {
+      waitUntil: `networkidle0`
+    })
   const pdfBuffer = Buffer.from(await page.pdf({format: "A4"}))
   await browser.close()
     // Upload to Sanity
