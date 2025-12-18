@@ -3,7 +3,7 @@ import Script from "next/script";
 import { HOTJAR_ID } from "@/constant";
 export default function Hotjar(){
     return(
-        <Script id="hotjar">
+        <Script id="hotjar" strategy = "afterInteractive">
         {`
           (function (h, o, t, j, a, r) {
             h.hj =

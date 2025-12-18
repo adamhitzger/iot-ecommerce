@@ -1,8 +1,6 @@
 "use client"
 
-import React, { useEffect, useActionState } from 'react';
-import Map, { Marker } from "react-map-gl"
-import 'mapbox-gl/dist/mapbox-gl.css';
+import { useEffect, useActionState } from 'react';
 import { Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Input } from '@/components/ui/input';
@@ -13,6 +11,7 @@ import { saveContact } from '@/actions/actions';
 import { ActionResponse, Contact } from '@/types';
 import Newsletter from '@/components/newsletter';
 import {motion} from "motion/react"
+
 const actionState: ActionResponse<Contact> = {
     success: false,
     message: ""
@@ -39,32 +38,30 @@ export default function Kontakt() {
             exit={{opacity: 0, y: -500}}
             transition={{duration: 0.5}}
             className='w-full rounded-lg shadow-lg shadow-secondary-foreground h-96 lg:h-auto bg-primary-third p-1'>
-            <Map
-                    mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN!}
-                    initialViewState={{
-                        longitude: 15.5803,
-                        latitude: 49.6053,
-                        zoom: 17,
-                    }}
-                    mapStyle="mapbox://styles/mapbox/streets-v12"
-                
-                >
-                    <Marker longitude={15.5803} latitude={49.6053} anchor='bottom' color="red" />
-                </Map>
+              <iframe className='w-full h-auto' src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2689.9602122521806!2d15.577702512004555!3d49.60540914772845!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470d0095718c4907%3A0x1603022d3f361fd7!2zxb1pxb5rb3ZhIDI4MCwgNTgwIDAxIEhhdmzDrcSNa8WvdiBCcm9kIDE!5e1!3m2!1scs!2scz!4v1765979103645!5m2!1scs!2scz" width="600" height="450"  loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
             </motion.div>
             <motion.div
-            initial={{opacity: 0, y: 500}}
-            animate={{opacity: 1, y: 0}}
-            exit={{opacity: 0, y: 500}}
-            transition={{duration: 0.5}}
+                initial={{opacity: 0, y: 500}}
+                animate={{opacity: 1, y: 0}}
+                exit={{opacity: 0, y: 500}}
+                transition={{duration: 0.5}}
             >
             <form className="bg-primary-third p-4  grid grid-cols-1 sm:grid-cols-2 rounded-lg px-5  w-full gap-3 " autoComplete="on" action={action}>
                 <div className='flex flex-col w-full space-y-2'>
-                    <label>Celé jméno*</label>
-                    <Input name="name" type="text" placeholder="Zadejte celé jméno" defaultValue={state.inputs?.name} disabled={isPending} />
+                    <label>Jméno*</label>
+                    <Input name="name" type="text" placeholder="Zadejte jméno" defaultValue={state.inputs?.name} disabled={isPending} />
                     {state?.errors?.name && (
                                  <p className="text-base font-semibold text-red-500">
                                  {state.errors.name}
+                               </p>
+                            )}
+                </div>
+                <div className='flex flex-col w-full space-y-2'>
+                    <label>Přijmení*</label>
+                    <Input name="surname" type="text" placeholder="Zadejte přijmení" defaultValue={state.inputs?.surname} disabled={isPending} />
+                    {state?.errors?.surname && (
+                                 <p className="text-base font-semibold text-red-500">
+                                 {state.errors.surname}
                                </p>
                             )}
                 </div>
@@ -86,15 +83,7 @@ export default function Kontakt() {
                                </p>
                             )}
                 </div>
-                <div >
-                    <label>Firma</label>
-                    <Input name="company" type="text" placeholder="Zadejte Vaši firmu" defaultValue={state.inputs?.ltd} disabled={isPending} />
-                    {state?.errors?.ltd && (
-                                 <p className="text-base font-semibold text-red-500">
-                                 {state.errors.ltd}
-                               </p>
-                            )}
-                </div>
+                
                 <div className='flex flex-col space-y-2 lg:col-span-2 w-full'>
                     <label>Zpráva*</label>
                     <Textarea name='msg' placeholder="Zadejte Vaši zprávu" defaultValue={state.inputs?.msg} disabled={isPending} />

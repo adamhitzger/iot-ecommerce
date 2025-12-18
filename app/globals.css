@@ -82,10 +82,10 @@
   }
   
   h1{
-    @apply underline decoration-wavy decoration-secondary underline-offset-2 text-3xl md:text-4xl lg:text-6xl font-bold text-center
+    @apply  text-3xl md:text-4xl lg:text-6xl font-bold text-center
   }
   form > div > label {
-    @apply underline decoration-wavy decoration-secondary text-lg
+    @apply underline decoration-wavy decoration-secondary text-lg 
   }
 }
 

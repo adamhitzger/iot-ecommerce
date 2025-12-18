@@ -34,7 +34,7 @@ export async function getAuth() {
   return auth;
 }
 
-export async function getUser(): Promise<User> {
+export async function getUser() {
   let dbUser;
     const {auth} = await createSupabaseClient();
     const supabase = await createSupabaseClient();

@@ -22,7 +22,7 @@ export default async function Home() {
       <ProductsGrid products={products} />
       <CategoriesGrid categories={categories}/>
       <Newsletter/>
-      <About/>
-      </>
+      <About/>     
+    </>
   );
 }

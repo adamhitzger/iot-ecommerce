@@ -31,33 +31,29 @@ export default function Details({user}: {user: User}){
                 <div className="text-center">
                     <h3 className="text-2xl font-bold text-primary-foreground">Zadejte Vaše údaje</h3>
                     <form className="space-y-4">
-                    <Input name="name" type="text" defaultValue={user?.first_name} disabled={isPending} />
-                    {state?.errors?.first_name && (
-                                 <p className="text-base font-semibold text-red-500">
-                                 {state.errors.first_name}
-                               </p>
-                            )}
-                    <Input name="surname" type="text" defaultValue={user?.last_name} disabled={isPending} />
-                    {state?.errors?.last_name && (
-                                 <p className="text-base font-semibold text-red-500">
-                                 {state.errors.last_name}
-                               </p>
-                            )}
+                    <Input name="name" type="text" defaultValue={user?.name} disabled={isPending} />
+                    <input type="hidden" name="id" value={user._id}/>
+                    <Input name="surname" type="text" defaultValue={user?.surname} disabled={isPending} />
+                   
                         <Input name="email" type="text" defaultValue={user?.email} disabled={isPending} />
-                        {state?.errors?.email && (
-                                 <p className="text-base font-semibold text-red-500">
-                                 {state.errors.email}
-                               </p>
-                            )}
-                        {user?.type === "b2b" &&
+                        <Input name="tel" type="tel" defaultValue={user?.tel} disabled={isPending} placeholder="Telefon" />
+
+  <label className="flex items-center space-x-2">
+    <input type="checkbox" name="souhlas" defaultChecked={user?.souhlas} disabled={isPending} />
+    <span>Souhlasím se zasíláním newsletterů</span>
+  </label>
+
+  <Input name="country" type="text" defaultValue={user?.country} disabled={isPending} placeholder="Země" />
+  <Input name="region" type="text" defaultValue={user?.region} disabled={isPending} placeholder="Kraj" />
+  <Input name="postalCode" type="text" defaultValue={user?.postalCode} disabled={isPending} placeholder="PSČ" />
+  <Input name="city" type="text" defaultValue={user?.city} disabled={isPending} placeholder="Město" />
+  <Input name="address" type="text" defaultValue={user?.address} disabled={isPending} placeholder="Adresa" />
+
+                        {user?.type === "bussiness" &&
                             <Input name="ico" type="text" defaultValue={user?.ico} />
                             
                         }
-                        {user?.type === "b2b" && state?.errors?.first_name && (
-                                 <p className="text-base font-semibold text-red-500">
-                                 {state.errors.ico}
-                               </p>
-                            )}
+                        
                         <div className="flex flex-row justify-around items-center">
                             <Button
                                 

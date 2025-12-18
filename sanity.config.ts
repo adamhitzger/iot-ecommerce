@@ -12,7 +12,7 @@ import { colorInput} from "@sanity/color-input"
 import {apiVersion, dataset, projectId} from './sanity/env'
 import {schema} from './sanity/schemaTypes'
 import {structure} from './sanity/structure'
-import { cancelledOrder, completedOrder, paidOrder, refundedOrder, sendOrder } from './sanity/lib/actions'
+import { cancelledOrder, completedOrder, paidOrder, refundedOrder, sendCampaign, sendOrder, sendSMS } from './sanity/lib/actions'
 
 
 export default defineConfig({
@@ -30,7 +30,10 @@ export default defineConfig({
     actions: ((prev: DocumentActionComponent[], context: { schemaType: string }) => {
       // Check if the schema type is 'orders'
       if (context.schemaType === 'orders') {
-        return [paidOrder, sendOrder, completedOrder, cancelledOrder, refundedOrder, ...prev];
+        return [paidOrder, sendOrder, completedOrder, cancelledOrder, refundedOrder,...prev];
+      }
+      if (context.schemaType === 'campaigns') {
+        return [sendCampaign,sendSMS,...prev];
       }
       return prev;
     }) as DocumentActionsResolver,

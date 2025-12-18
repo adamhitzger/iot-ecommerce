@@ -9,24 +9,10 @@ export const contact = defineType({
     icon: BugIcon,
     fields: [
         defineField({
-            type: "email",
-            title:"Email",
-            name: "email", 
-        }),
-        defineField({
-            type: "string",
-            title:"Celé méno",
-            name: "fullname", 
-        }),
-        defineField({
-            type: "string",
-            title:"Telefon",
-            name: "tel", 
-        }),
-        defineField({
-            type: "string",
-            title:"Firma",
-            name: "ltd", 
+            type: "reference",
+            name: "user",
+            title: "Uživatel",
+            to: [{type: "users"}]
         }),
         defineField({
             type: "string",

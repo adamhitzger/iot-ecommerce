@@ -25,7 +25,7 @@ const actionState: ActionResponse<Order> = {
 
 export default function CheckouPage(){
     const date = new Date()
-    const now = `${date.getFullYear()}/0${date.getMonth()+1}/0${date.getDate()}`
+    const now = `${date.getFullYear()}${date.getMonth()+1 >9 ? date.getMonth()+1:"/0"+date.getMonth()+1}${date.getDate()>9?date.getDate():"/0"+date.getDate()}`
     const {items, removeItem, updateQuantity, total, clearCart } = useCart()
     const [packetaPoint, setPacketaPoint] = useState<{id: number, street: string}>({id: 0, street: ""});
     const [coupon, setCoupon] = useState({
@@ -42,7 +42,7 @@ export default function CheckouPage(){
         }
         
     }, [state.success, clearCart, state.message]); 
-    const del = coupon.free_del ? 0 : 89
+        const del = coupon.free_del ? 0 : 89
 
         async function addCoupon(formData: FormData) {
                     const result = await validateCoupon(formData);
@@ -121,15 +121,15 @@ export default function CheckouPage(){
                                 min="1"
                                 disabled={ispending}
                             />
-                            <Button variant="outline" size="icon" onClick={() => removeItem(item.terpens, item.variant)}>
-                                        <X className="h-4 w-4" />
+                            <Button variant="outline"  className="bg-red-500 border-0" size="icon" onClick={() => removeItem(item.terpens, item.variant)}>
+                                        <X className="h-4 w-4 text-white" />
                                         <span className="sr-only">Odstranit</span>
                                     </Button>
                                     </div>
                                 <div className="grid grid-cols-3 gap-2">
                                     <Input type="text" name={`variant${idx}`} value={item.variant} readOnly disabled={ispending} />
                                     <Input type="text" name={`terpens${idx}`} value={item.terpens} readOnly disabled={ispending} />
-                                    <Input type="text" name={`price${idx}`} value={`${item.price}`} readOnly disabled={ispending} />
+                                    <Input type="text" name={`price${idx}`} value={`${item.price} Kč`} readOnly disabled={ispending} />
                                     
                                     <Input type="hidden" name={`id${idx}`} value={item.id} readOnly className="mb-2" disabled={ispending} />
                                 </div>
@@ -137,6 +137,13 @@ export default function CheckouPage(){
                             
                         </div>
                     ))}
+                    <div className="space-y-3">
+                        <h2 className="text-2xl font-semibold mb-4">Slevový kupon</h2>
+                        <div className="flex flex-col space-y-2">
+                   <Input id="coupon" name="coupon" type="text" defaultValue={coupon.code} placeholder="Zadejte kód kupónu" disabled={ispending} />
+                   {coupon.sale ? <Button type="submit" formAction={delCoupon} variant={"outline"} disabled={ispending}>{ispending ? <Loader2 className='animate-spin' /> :"Smazat kupon"}</Button>: <Button type='submit' formAction={addCoupon} disabled={ispending}>{ispending ? <Loader2 className='animate-spin' /> :"Ověřit kupon"}</Button>}
+                        </div>
+                        </div>
                       <div className="text-xl font-semibold mt-4">Doprava: {del} Kč</div>
                     <div className="text-xl font-semibold mt-4">Celkem: {coupon.sale ? <span className="text-red-600 line-through font-bold">{total} Kč</span> : null}  {celkem } Kč</div>
                 
@@ -155,39 +162,23 @@ export default function CheckouPage(){
                     <div className="space-y-4">
                         <div>
                             <label htmlFor="email">Email*</label>
-                            <Input id="email" name="email" type="email" defaultValue={state?.inputs?.email}  placeholder="Zadejte email" />
-                            {state?.errors?.email && (
-                                 <p className="text-base font-semibold text-red-500">
-                                 {state.errors.email}
-                               </p>
-                            )}
+                            <Input id="email" name="email" type="email"   placeholder="Zadejte email" />
+                            
                         </div>
                         <div>
                             <label htmlFor="phone">Telefonní číslo*</label>
-                            <Input id="phone" name="phone" type="tel" defaultValue={state?.inputs?.phone} placeholder="Zadejte telefonní číslo"/>
-                            {state?.errors?.phone && (
-                                 <p className="text-base font-semibold text-red-500">
-                                 {state.errors.phone}
-                               </p>
-                            )}
+                            <Input id="phone" name="phone" type="tel"  placeholder="Zadejte telefonní číslo"/>
+                           
                         </div>
                         <div>
                             <label htmlFor="name">Jméno*</label>
-                            <Input id="name" name="name" type="text" defaultValue={state?.inputs?.name}  placeholder="Zadejte jméno"/>
-                            {state?.errors?.name && (
-                                 <p className="text-base font-semibold text-red-500">
-                                 {state.errors.name}
-                               </p>
-                            )}
+                            <Input id="name" name="name" type="text"  placeholder="Zadejte jméno"/>
+                            
                         </div>
                         <div>
                             <label htmlFor="surname">Přijmení*</label>
-                            <Input id="surname" name="surname" type="text" defaultValue={state?.inputs?.surname} placeholder="Zadejte přijmení"/>
-                            {state?.errors?.surname && (
-                                 <p className="text-base font-semibold text-red-500">
-                                 {state.errors.surname}
-                               </p>
-                            )}
+                            <Input id="surname" name="surname" type="text"  placeholder="Zadejte přijmení"/>
+                            
                         </div>
                         <div>
                             <label htmlFor="country">Země*</label>
@@ -195,57 +186,36 @@ export default function CheckouPage(){
                         </div>
                         <div>
                             <label htmlFor="street">Ulice a číslo popisné*</label>
-                            <Input id="address" name="address" type="text" defaultValue={state?.inputs?.address}  placeholder="Zadejte adresu"/>
-                            {state?.errors?.address && (
-                                 <p className="text-base font-semibold text-red-500">
-                                 {state.errors.address}
-                               </p>
-                            )}
+                            <Input id="address" name="address" type="text"   placeholder="Zadejte adresu"/>
+                            
                         </div>
 
                         <div>
                             <label htmlFor="city">Obec*</label>
-                            <Input id="city" name="city" type="text" defaultValue={state?.inputs?.city} placeholder="Zadejte obec"/>
-                            {state?.errors?.city && (
-                                 <p className="text-base font-semibold text-red-500">
-                                 {state.errors.city}
-                               </p>
-                            )}
+                            <Input id="city" name="city" type="text"  placeholder="Zadejte obec"/>
+                            
                         </div>
                         <div>
                             <label htmlFor="region">Kraj*</label>
-                            <Input id="region" name="region" type="text" defaultValue={state?.inputs?.region}  placeholder="Zadejte kraj"/>
-                            {state?.errors?.region && (
-                                 <p className="text-base font-semibold text-red-500">
-                                 {state.errors.region}
-                               </p>
-                            )}
+                            <Input id="region" name="region" type="text"  placeholder="Zadejte kraj"/>
+                            
                         </div>
                         <div>
                             <label htmlFor="postalCode">PSČ*</label>
-                            <Input id="postalCode" name="postalCode" type="text" defaultValue={state?.inputs?.postalCode} placeholder="Zadejte PSČ"/>
-                            {state?.errors?.postalCode && (
-                                 <p className="text-base font-semibold text-red-500">
-                                 {state.errors.postalCode}
-                               </p>
-                            )}
+                            <Input id="postalCode" name="postalCode" type="text"  placeholder="Zadejte PSČ"/>
+                            
                             <Input id="packetaId" name="packetaId" type="hidden" defaultValue={state?.inputs?.packetaId} value={packetaPoint.id} />
                             
                             <Input  name="total" type="hidden"  value={celkem}/>
                             <Input  name="couponValue" type="hidden"  value={coupon.value}/>
+                            <Input  name="del" type="hidden"  value={del}/>
                             <Input  name="date" type="hidden" value={now} />
                             <Input type="hidden" name="length" value={`${items.length}`} readOnly disabled={ispending}/>
                         </div>
                     </div>
                     <div className="grid md:grid-cols-2 gap-10">
                     <div className="flex flex-col gap-4">
-                        <div className="space-y-3">
-                        <h2 className="text-2xl font-semibold mb-4">Slevový kupon</h2>
-                        <div className="flex flex-col space-y-2">
-                   <Input id="coupon" name="coupon" type="text" defaultValue={coupon.code} placeholder="Zadejte kód kupónu" disabled={ispending} />
-                   {coupon.sale ? <Button type="submit" formAction={delCoupon} variant={"outline"} disabled={ispending}>{ispending ? <Loader2 className='animate-spin' /> :"Smazat kupon"}</Button>: <Button type='submit' formAction={addCoupon} disabled={ispending}>{ispending ? <Loader2 className='animate-spin' /> :"Ověřit kupon"}</Button>}
-                        </div>
-                        </div>
+                        
                         <div >
                         <h2 className="text-2xl font-semibold mb-4">Doprava</h2>
                             <Button type='button' onClick={showPacketaWidget}>Vyberte Zásilkovnu</Button>

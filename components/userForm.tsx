@@ -1,12 +1,11 @@
 "use client"
 import { ActionResponse, Order, User } from "@/types";
-import { useActionState } from "react";
-import {  deleteAccount, signOut } from "@/actions/actions";
+import { useActionState, useTransition } from "react";
+import {  signOut } from "@/actions/actions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import Password from "./modals/pass";
 import Details from "./modals/details";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -76,25 +75,14 @@ export function UserOrderCard({ order }: { order: Order }) {
   }
   
   
-const actionState: ActionResponse<User> = {
+const actionState: ActionResponse<{id: string}> = {
     success: false,
     message: "",
 }
 
-export default function UserForm({user, changePass, changeNames, orders}: {user: User, changePass: string | undefined, changeNames: string | undefined, orders: Order[]}){
+export default function UserForm({user, changeNames, orders}: {user: User,  changeNames: string | undefined, orders: Order[]}){
   
-    const [
-          // eslint-disable-next-line
-        state, 
-        action, 
-        isPending] = useActionState(signOut, actionState);
-    
-    const [
-        // eslint-disable-next-line
-        state2, 
-        action2, 
-        isPending2
-    ] = useActionState(deleteAccount, actionState);
+    const [isPending, startTransition] = useTransition()
     
     return(
         <>
@@ -115,9 +103,9 @@ export default function UserForm({user, changePass, changeNames, orders}: {user:
                         </div>
                         <div>
                             <label htmlFor="name" >Celé jméno</label>
-                            <Input id="name" type="text" defaultValue={`${user?.first_name} ${user?.last_name}`} readOnly/>
+                            <Input id="name" type="text" defaultValue={`${user.name} ${user.surname}`} readOnly/>
                         </div>
-                        {user?.type === "b2b" &&
+                        {user?.type === "bussiness" &&
                             <div>
                             <label htmlFor="ico" >IČO</label>
                             <Input id="ico" type="text" defaultValue={user?.ico} readOnly/>
@@ -129,13 +117,9 @@ export default function UserForm({user, changePass, changeNames, orders}: {user:
                         <Link href={"/user?names=true"}>
                         <Button type="button" size={"sm"}  >{isPending ? <Loader2 className="animate-spin"/> : "Změnit údaje"}</Button>
                         </Link>
-                        <Link href={"/user?pass=true"}>
-                        <Button type="button" size={"sm"} >{isPending2 ? <Loader2 className="animate-spin"/> : "Změnit heslo"}</Button>
-                        </Link>
-                       
-                        <Button type="submit" size={"sm"} variant={"outline"} formAction={action}>{isPending ? <Loader2 className="animate-spin"/> : "Odhlásit se"}</Button>
-                        <Button type="submit" size={"sm"} variant={"outline"} formAction={action2}>{isPending2 ? <Loader2 className="animate-spin"/> : "Smazat účet"}</Button>
-                        
+                       <input type="hidden" name="id" value={user._id}/>
+                        <Button type="submit" size={"sm"} variant={"outline"} 
+                        formAction={signOut}>{isPending ? <Loader2 className="animate-spin"/> : "Odhlásit se"}</Button>
                         </div>
                         </div>
                         
@@ -159,7 +143,6 @@ export default function UserForm({user, changePass, changeNames, orders}: {user:
       )}
         </motion.div>
         </div>
-        {changePass && <Password/>}
         {changeNames && <Details user={user}/>}
         </>
 )

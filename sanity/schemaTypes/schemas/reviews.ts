@@ -9,11 +9,6 @@ export const review = defineType({
     fields: [
         defineField({
             type: "string",
-            title:"Jméno",
-            name: "name", 
-        }),
-        defineField({
-            type: "string",
             title:"Hodnocení",
             name: "review", 
         }),
@@ -27,6 +22,12 @@ export const review = defineType({
             title: "Produkt",
             type: "reference",
             to: [{type: "products"}]
+        }),
+        defineField({
+            name: "user",
+            title: "Uživatel",
+            type: "reference",
+            to: [{type: "users"}]
         })
     ]
 })

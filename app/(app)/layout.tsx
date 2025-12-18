@@ -8,7 +8,7 @@ import CookiesBanner from "@/components/cookiesbanner";
 import { Toaster } from "react-hot-toast";
 import { CartProvider } from "@/lib/card";
 import Hotjar from "@/components/hotjar";
-//import { GoogleAnalytics } from '@next/third-parties/google'
+import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google'
 
 const inconsolata = Inconsolata({
   subsets: ["latin"],
@@ -75,7 +75,8 @@ export default function RootLayout({
             }
           }}
         />
-        {/*<GoogleAnalytics gaId="kkkk"/>*/}
+         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_KEY as string}/>
+          <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_KEY as string}/>
       </body>
      
     </html>

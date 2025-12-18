@@ -1,5 +1,6 @@
 import { Links, Cards} from "@/types";
-import { ShoppingBagIcon, CheckCircle2Icon } from "lucide-react";
+import { ShoppingBagIcon, CheckCircle2Icon, TruckIcon, UsersIcon, StarIcon } from "lucide-react";
+
 
 export const HOTJAR_ID = 5258830
 export const navLinks: Links = [
@@ -25,25 +26,31 @@ export const navLinks: Links = [
     }
 ]
 
+
 export const whyCards: Cards = [
-    {
-        icon: <ShoppingBagIcon width={40} height={40}/>, 
-        heading: "Bongy",
-        text: "Sháníte sklěněný bong? Nebo potřebujete fancy papírky s filtrama? U nás najdete vše!"
-    },
-    {
-        icon: <CheckCircle2Icon width={40} height={40}/>,
-        heading: "Papírky a filtry",
-        text: "Sháníte sklěněný bong? Nebo potřebujete fancy papírky s filtrama? U nás najdete vše!"
-    },
-    {
-        icon: <ShoppingBagIcon width={40} height={40}/>,
-        heading: "Fajfky",
-        text: "Sháníte sklěněný bong? Nebo potřebujete fancy papírky s filtrama? U nás najdete vše!"
-    },
-    {
-        icon: <CheckCircle2Icon width={40} height={40}/>,
-        heading: "Kosmetika",
-        text: "Sháníte sklěněný bong? Nebo potřebujete fancy papírky s filtrama? U nás najdete vše!"
-    },
-]
+  {
+    icon: <UsersIcon width={40} height={40} />,
+    heading: "Zákaznický servis",
+    text: "Záleží nám na našich zákaznících – vždy vám rádi poradíme a pomůžeme s výběrem."
+  },
+  {
+    icon: <TruckIcon width={40} height={40} />,
+    heading: "Rychlé odeslání",
+    text: "Objednané zboží balíme rychle a bezpečně, aby k vám dorazilo co nejdříve."
+  },
+  {
+    icon: <CheckCircle2Icon width={40} height={40} />,
+    heading: "Sledování objednávky",
+    text: "I po předání dopravci víte přesně, kde se vaše zásilka nachází."
+  },
+  {
+    icon: <StarIcon width={40} height={40} />,
+    heading: "Prémiová kvalita",
+    text: "U nás najdete jen ověřené a kvalitní produkty, na které se můžete spolehnout."
+  },
+  {
+    icon: <ShoppingBagIcon width={40} height={40} />,
+    heading: "Široký sortiment",
+    text: "Bongy, papírky, filtry, fajfky a příslušenství – vše na jednom místě."
+  },
+];

@@ -22,7 +22,11 @@ export const BANNERS = groq`*[_type == "banners"] {
 }`;
 
 export const PRODUCT_REVIEWS = groq`*[_type == "reviews" && product->slug.current == $slug][0...9] {
+    user->{
     name,
+    surname,
+    email,
+    },
     review,
     rating,
 }`;
@@ -99,4 +103,88 @@ export const USER_ORDERS = groq`*[_type == "orders" && email == $email]{
     couponValue,
     total,
     cod,    
+}`
+
+export const USER_BY_EMAIL = groq`*[_type == "users" && email == $email]{
+    _id,
+    souhlas
+}`
+
+export const GET_VERIFY_CODE = groq`*[_type == "verifyCodes" && code == $code]{
+    code,
+    _id,
+    email
+}`
+
+export const GET_CUR_USER = groq`*[_type == "users" && email==$email]{
+  _id,
+  email,
+  name,
+  surname,
+  tel,
+  type,
+  ico,
+  souhlas,
+  country,
+  region,
+  postalCode,
+  address,
+  city
+}
+`
+
+export const GET_CAMPAIGN = groq`*[_type == "campaigns" && _id == $id][0]{
+    _id,
+    _type,
+    name,
+    slug,
+    campaignCode->{
+        code
+    },
+    targetSegment,
+    targetEra,
+    targetSegmentType,
+    emailSubject,
+    emailHeading,
+    emailBody,
+    emailProducts[]->{
+        name,
+        price,
+        sale,
+        "imageUrl":image.asset->url,
+    },
+    smsText,
+    utmTerm,
+    utmContent
+  }`;
+
+  export const GET_USERS = groq`*[_type == "orders" && user->event_type == $type && user->souhlas == true && dateTime(_updatedAt) > dateTime(now()) - $date]{
+    user->{
+    email,
+    tel,
+    name,
+    surname
+    }
+  }`
+
+export const ORDER_BY_ID = groq`*[_type == "orders" && _id == $id]{
+    orderedProducts[],
+    "invoice": invoice.asset->url,
+    status,
+    couponValue,
+    free_del,
+    total,
+    cod, 
+    date, 
+    user->{
+        email,
+        tel,
+        name,
+        surname,
+        country,
+        region,
+        postalCode,
+        address,
+        city
+    },
 }`

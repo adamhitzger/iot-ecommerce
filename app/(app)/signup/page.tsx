@@ -37,21 +37,13 @@ export default function SignUpPage(){
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 col-span-2">
             <div>
                             <label htmlFor="name">Jméno*</label>
-                            <Input id="name" name="name" type="text" defaultValue={state?.inputs?.first_name} placeholder="Zadejte jméno"/>
-                            {state?.errors?.first_name && (
-                                 <p className="text-base font-semibold text-red-500">
-                                 {state.errors.first_name}
-                               </p>
-                            )}
+                            <Input id="name" name="name" type="text"  placeholder="Zadejte jméno"/>
+                           
                         </div>
                         <div>
                             <label htmlFor="surname">Přijmení*</label>
-                            <Input id="surname" name="surname" type="text" defaultValue={state?.inputs?.last_name} placeholder="Zadejte přijmení"/>
-                            {state?.errors?.last_name && (
-                                 <p className="text-base font-semibold text-red-500">
-                                 {state.errors.last_name}
-                               </p>
-                            )}
+                            <Input id="surname" name="surname" type="text" placeholder="Zadejte přijmení"/>
+                            
                         </div>
                         <div>
                             <label htmlFor="email">Email*</label>
@@ -61,16 +53,6 @@ export default function SignUpPage(){
                                  {state.errors.email}
                                </p>
                             )}
-                        </div>
-                        <div>
-                            <label htmlFor="pass" >Heslo*</label>
-                            <Input id="pass"  name="pass"  type="password" placeholder="Zadejte heslo"/>
-                            {state?.errors?.email && (
-                                 <p className="text-base font-semibold text-red-500">
-                                 {state.errors.email}
-                               </p>
-                            )}
-                            
                         </div>
                         <div>
                             <label htmlFor="ico" >IČO pro B2B</label>

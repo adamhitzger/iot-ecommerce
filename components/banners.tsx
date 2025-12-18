@@ -22,6 +22,9 @@ export function Slider({slides}: {slides: Banners}) {
     );
     return( 
         <Carousel
+        opts={{
+            loop: true
+        }}
             plugins={[plugin.current]}
             onMouseEnter={plugin.current.stop}
             onMouseLeave={plugin.current.reset}
@@ -30,7 +33,7 @@ export function Slider({slides}: {slides: Banners}) {
         >
             <CarouselContent>
                 {slides.map((s: Banner, i: number) => (
-                    <CarouselItem className="flex flex-wrap w-full gap-y-6 sm:gap-y-0" key={i}>
+                    <CarouselItem className="flex flex-wrap-reverse w-full gap-y-6 sm:gap-y-0" key={i}>
                         <motion.div 
                         initial={{opacity: 0, y: -500}}
                         animate={{opacity: 1, y: 0}}
@@ -45,8 +48,8 @@ export function Slider({slides}: {slides: Banners}) {
                             </Link>
                         </motion.div>
                     
-                        <div className="flex flex-row w-full md:w-1/2 justify-end">
-                            <Image  src={s.imageUrl} alt={s.text} width={400} height={400}/>
+                        <div className="relative flex flex-row min-h-72 sm:min-h-80 md:min-h-96 w-full md:w-1/2 justify-end">
+                            <Image  src={s.imageUrl} alt={s.text} fill className="object-contain"/>
                         </div>
                         
                     </CarouselItem>

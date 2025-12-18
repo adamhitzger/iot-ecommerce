@@ -6,26 +6,27 @@ const phoneRegex = new RegExp(/^[0-9]{9}$/)
 
 export const userUpdateSchema = z.object({
     email: z.string().min(1, {message: "Pole je povinné"}).email("Zadali jste email ve špatném formátu"),
-    last_name: z.string().min(1,{message: "Pole je povinné"}),
-    first_name: z.string().min(1, "Pole je povinné"),
-    ico: z.number().optional()
+    name: z.string().min(1,{message: "Pole je povinné"}),
+    surname: z.string().min(1, "Pole je povinné"),
+    id: z.string().min(1, "Pole je povinné"),
+    ico: z.number().optional(),
+    tel: z.string().optional(),
+  souhlas: z.boolean().optional(),
+  country: z.string().optional(),
+  region: z.string().optional(),
+  postalCode: z.string().optional(),
+  city: z.string().optional(),
+  address: z.string().optional(),
 })
-
-export const passSchema = z.object({
-    password: z.string().min(8, "Heslo musí obsahovat nejméně 8 znaků"),
-})
-
 
 export const signSchema = z.object({
     email: z.string().min(1, {message: "Pole je povinné"}).email("Zadali jste email ve špatném formátu"),
-    password: z.string().min(8, "Heslo musí obsahovat nejméně 8 znaků"),
 })
 
 export const userSchema = z.object({
     email: z.string().min(1, {message: "Pole je povinné"}).email("Zadali jste email ve špatném formátu"),
     last_name: z.string().min(1,{message: "Pole je povinné"}),
     first_name: z.string().min(1, "Pole je povinné"),
-    password: z.string().min(8, "Heslo musí obsahovat nejméně 8 znaků"),
     ico: z.number().optional()
 })
 
@@ -45,28 +46,37 @@ export const orderedSchema = z.object({
     total: z.number().min(1, "Pole je povinné"),
     status: z.string(),
     date: z.string(),
-    couponValue: z.number().optional()
+    couponValue: z.number().optional(),
+    del: z.number().optional(),
 })
+
+export type zodOrder = z.infer<typeof orderedSchema>
 
 export const contactSchema = z.object({
     _type: z.string(),
     email: z.string().min(1, {message: "Pole je povinné"}).email("Zadali jste email ve špatném formátu"),
     tel: z.string().min(1,{message: "Pole je povinné"}).regex(phoneRegex, {message: "Zadali jste číslo ve špatném formátu"}),
     name: z.string().min(1, "Pole je povinné"),
+    surname: z.string().min(1, "Pole je povinné"),
     msg: z.string().min(1, "Pole je povinné"),
     ltd: z.string().optional()
 })
+
+
 
 export const newsletterSchema = z.object({
     _type: z.string(),
     email: z.string().min(1, {message: "Pole je povinné"}).email("\nZadali jste email ve špatném formátu"),
     name: z.string().min(1, "Pole je povinné"),
     surname: z.string().min(1, "Pole je povinné"),
+    event_type: z.string(),
 })
 
 export const reviewSchema = z.object({
     _type: z.string(),
     name: z.string().min(1, "Pole je povinné"),
+    surname: z.string().min(1, "Pole je povinné"),
+    email: z.string().min(1, {message: "Pole je povinné"}).email("\nZadali jste email ve špatném formátu"),
     review: z.string().min(1, "Pole je povinné"),
     rating: z.number().min(1, "Pole je povinné").max(5, "Pole je povinné"),
     product: z.object({

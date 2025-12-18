@@ -1,31 +1,37 @@
-import React , { ReactNode } from "react";
+import React , { ReactNode, Reference } from "react";
 
 type Country = "Slovenská republika" | "Česká republika";
 type Status = "Přijatá"| "Zaplacená" |"Odeslaná"| "Vyzvednutá"| "Zrušená"| "Vrácení";
 
 export type User ={
-    id?: string;
-    first_name: string;
-    last_name: string;
+    _type: "users",
+    _id?:string,
+    name?: string;
+    surname?: string;
     email: string;
-    password?: string;
-    type?: "b2c" | "b2b";
+    type?: "customer" | "bussiness";
     ico?: number;
-    sanity_id?: string
-} | null | undefined
+    tel?: string;
+    event_type: "newsletter" | "reviews" | "order" | "contact";
+    souhlas?: boolean;
+    country?: string;
+    region?: string;
+    postalCode?: string;
+    address?: string;
+    city?: string;
+}
 
 export interface SignIn {
     email: string;
-    password: string;
 }
 
 export interface Contact {
     _type: "contact";
     name: string;
+    surname: string;
     email: string;
     tel: string;
     msg: string;
-    ltd?: string;
 }
 
 export interface ActionResponse<T> {
@@ -37,6 +43,26 @@ export interface ActionResponse<T> {
     inputs?: T 
 }
 
+export type Campaign = {
+  _id?: string;           // Sanity document ID
+  _type: "campaigns";      // typ dokumentu
+  name: string;
+  slug: string;
+  campaignCode: Coupon;
+  targetSegment: "newsletter" | "order" | "byCategory" | "byProduct";
+  targetEra: "month" | "quarter" | "half-yearly" | "year" | "overYear";
+  targetSegmentType?: "one" | "more";
+
+  emailSubject: string;
+  emailHeading: string;
+  emailBody: any;
+  emailProducts: Products;
+
+  smsText: string;
+  utmTerm: string;
+  utmContent: string;
+};
+
 export interface OrderedItem {
     _type: string;
     productId: { _type: string, _ref: string };
@@ -47,34 +73,20 @@ export interface OrderedItem {
     name?: string;
 }
 
-export interface Newsletter {
-    _type: "newsletter";
-    email: string;
-    name: string;
-    surname: string;
-}
-
 export interface Order {
-    _id?: string;
+    _id: string;
     _type: "orders";
-    email: string;
-    name: string;
-    surname: string;
-    phone: string;
-    country: string;
-    region: string;
-    postalCode: string;
-    address: string;
+    user: User;
     total: number;
     date: string;
-    city: string;
     packetaId: number;
-    barcode?: string;
+    barcode: string;
     status: Status;
     cod: string;
-    orderedProducts?: OrderedItem[];
-    invoice?: string;
+    orderedProducts: OrderedItem[];
+    invoice: string;
     couponValue: number;
+    free_del: boolean
 }
 
 export interface BarcodeSend {
@@ -144,7 +156,7 @@ export interface basketItem{
 
 export interface Review {
     _type: string;
-    name: string;
+    user:User,
     review: string;
     rating: number;
     product: {
@@ -198,3 +210,4 @@ export type Reviews = Review[]
 export type Categories = Category[]
 export type Links = Href[]
 export type XML = Route[]
+export type Campaigns = Campaign[]

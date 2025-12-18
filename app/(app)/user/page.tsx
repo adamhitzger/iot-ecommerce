@@ -1,3 +1,4 @@
+import { getCurrentUser } from "@/auth/currentUser";
 import { getUser } from "@/auth/server"
 import UserForm from "@/components/userForm"
 import {  sanityFetch } from "@/sanity/lib/client";
@@ -8,9 +9,10 @@ import { Order } from "@/types";
 export default async function UserPage(props: { searchParams: Promise<{ [key: string]: string | undefined }> }){
     const searchParams = await props.searchParams
     const changeNames =  searchParams?.names;
-    const changePass =  searchParams?.pass
     
-    const user = await getUser()
+    
+    const user = await getCurrentUser({withFullUser: true})
+    console.log(user)
     if (!user) {
         return <div>User not found</div>
       }
@@ -26,7 +28,7 @@ export default async function UserPage(props: { searchParams: Promise<{ [key: st
     console.log(user)
     return(   
         <>
-        <UserForm user={user} changePass={changePass} changeNames={changeNames} orders={orders}/>   
+        <UserForm user={user}  changeNames={changeNames} orders={orders}/>   
        </>
     )
 }

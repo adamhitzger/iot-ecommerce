@@ -8,54 +8,10 @@ export const orders = defineType({
     icon: PackageIcon,
     fields: [
         defineField({
-            type: "email",
-            title:"Email",
-            name: "email", 
-        }),
-        defineField({
-            type: "string",
-            title:"Jméno",
-            name: "name", 
-        }),
-        defineField({
-            type: "string",
-            title:"Přijmení",
-            name: "surname", 
-        }),
-        defineField({
-            type: "string",
-            title:"Telefonní číslo",
-            name: "phone", 
-        }),
-        defineField({
-            type: "string",
-            title:"Země",
-            name: "country", 
-            initialValue: "Česká republika",
-            options: {
-                list: ["Slovenská republika","Česká republika"],
-                layout: "dropdown",
-            }
-        }),
-        defineField({
-            type: "string",
-            title:"Kraj",
-            name: "region", 
-        }),
-        defineField({
-            type: "string",
-            title: "PSČ",
-            name: "postalCode", 
-        }),
-        defineField({
-            type: "string",
-            title:"Adresa",
-            name: "address", 
-        }),
-        defineField({
-            type: "string",
-            title:"Město",
-            name: "city", 
+            type: "reference",
+            title:"Uživatel",
+            name: "user",
+            to: [{type: "users"}] 
         }),
         defineField({
             type: "string",
@@ -78,6 +34,11 @@ export const orders = defineType({
             title:"Hodnota kuponu",
             name: "couponValue",
             validation: rule => rule.positive().integer().min(0), 
+        }),
+        defineField({
+            type: "boolean",
+            title:"Hodnota kuponu",
+            name: "free_del",
         }),
         defineField({
             type: "number",

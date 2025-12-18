@@ -6,9 +6,9 @@ import { useActionState, useEffect, useRef} from 'react'
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { saveNewsletter } from '@/actions/actions';
-import { Newsletter as N, ActionResponse } from '@/types';
+import { User, ActionResponse } from '@/types';
 import { motion } from 'motion/react';
-const actionState: ActionResponse<N> = {
+const actionState: ActionResponse<User> = {
     success: false,
     message: ""
 }

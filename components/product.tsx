@@ -1,7 +1,7 @@
 "use client";
 
 import { components } from "@/sanity/lib/components";
-import { Product, Review, Reviews,  ActionResponse } from "@/types";
+import { Product, Review, Reviews,  ActionResponse, User } from "@/types";
 import { PortableText } from "next-sanity";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,7 +15,7 @@ import { createBasket, saveReview } from "@/actions/actions";
 import { Textarea } from "./ui/textarea";
 import toast from "react-hot-toast";
 
-const reviewState: ActionResponse<Review> = {
+const reviewState: ActionResponse<User> = {
     success: false,
     message: ""
 }
@@ -152,7 +152,7 @@ export default function ProductComponent({product, reviews}: {product: Product, 
                             
                             <div className="flex flex-row self-end space-x-2"><span>{r.rating}/5</span> <StarIcon fill="#FFEE8C" color="#FFEE8C" className="h-5 w-5 "/></div>
                             <p>&apos;{r.review}&apos;</p>
-                            <i className="">{r.name}</i>
+                            <i className="">{r.user.name}</i>
                         </div>
                     ))}
                 </div>
@@ -160,28 +160,36 @@ export default function ProductComponent({product, reviews}: {product: Product, 
             <h1 className='text-2xl font-bold text-center'>Ohodnoťte produkt! </h1>
         <form className="w-full  grid grid-cols-1 sm:grid-cols-2  gap-6 " id='newsletter'>
             <div><label htmlFor="name">Vaše jméno</label>
-            <Input className='w-full ' name="name" id="name" type="text" defaultValue={state2?.inputs?.name} placeholder="Zadejte celé jméno"  />
+            <Input className='w-full ' name="name" id="name" type="text" defaultValue={state2?.inputs?.name} placeholder="Zadejte jméno"  />
             {state2?.errors?.name && (
                                  <p className="text-base font-semibold text-red-500">
                                  {state2.errors.name}
                                </p>
                             )}
             </div>
-            <div><label htmlFor="rating" className="flex flex-row">Hodnoceni (1-5)<StarIcon fill="#FFEE8C" color="#FFEE8C" className="h-5 w-5 "/></label>
-            <Input className='w-full ' name="rating" type="number" min={1} max={5}  defaultValue={state2?.inputs?.rating}/>
-            {state2?.errors?.rating && (
+            <div><label htmlFor="name">Vaše přijmení</label>
+            <Input className='w-full ' name="surname" id="surname" type="text" defaultValue={state2?.inputs?.name} placeholder="Zadejte jméno"  />
+            {state2?.errors?.surname && (
                                  <p className="text-base font-semibold text-red-500">
-                                 {state2.errors.rating}
+                                 {state2.errors.surname}
                                </p>
                             )}
             </div>
-            <div><label htmlFor="review">Zpráva</label>
-            <Textarea name="review" id="review" placeholder="Napište zprávu" defaultValue={state2?.inputs?.review}/>
-            {state2?.errors?.review && (
+            <div><label htmlFor="name">Váš e-mail</label>
+            <Input className='w-full ' name="email" id="email" type="email" defaultValue={state2?.inputs?.name} placeholder="Zadejte e-mail"  />
+            {state2?.errors?.email && (
                                  <p className="text-base font-semibold text-red-500">
-                                 {state2.errors.review}
+                                 {state2.errors.email}
                                </p>
                             )}
+            </div>
+            <div><label htmlFor="rating" className="flex flex-row">Hodnoceni (1-5)<StarIcon fill="#FFEE8C" color="#FFEE8C" className="h-5 w-5 "/></label>
+            <Input className='w-full ' name="rating" type="number" min={1} max={5}  />
+         
+            </div>
+            <div><label htmlFor="review">Zpráva</label>
+            <Textarea name="review" id="review" placeholder="Napište zprávu" />
+  
             </div>
             <input type="hidden" name="_id" value={_id}/>
             <div className='grid grid-cols-1 justify-items-center  w-full '>
